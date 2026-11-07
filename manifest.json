@@ -1,24 +1,32 @@
 {
+  "id": "/",
   "name": "মেসার্স এস.এম. ট্রেডার্স",
   "short_name": "এস.এম.ট্রেডার্স",
-  "description": "মেসার্স এস.এম. ট্রেডার্স - হিসাব ও স্টক ম্যানেজমেন্ট",
-  "start_url": "./index.html",
+  "description": "মেসার্স এস.এম. ট্রেডার্স (প্রোঃ মোঃ জহিরুল ইসলাম) এর আধুনিক ডিজিটাল স্টক, বিক্রয় ও বাকি খাতা",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1b4d3e",
   "orientation": "portrait",
+  "theme_color": "#1b4d3e",
+  "background_color": "#1b4d3e",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
