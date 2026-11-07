@@ -244,8 +244,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <button class="btn btn-primary" onclick="switchTab('sell')">🛒 নতুন বিক্রয় করুন</button>
           <button class="btn btn-gold" onclick="switchTab('stock')">📦 স্টক যোগ করুন</button>
-          <button class="btn btn-secondary" onclick="openStockReportModal()">📄 স্টক রিপোর্ট PDF</button>
-          <button class="btn btn-primary" style="background:#0284c7;" onclick="exportJSONBackup()">💾 ডাটা ব্যাকআপ নিন</button>
+          <button class="btn btn-secondary" style="grid-column: span 2;" onclick="openStockReportModal()">📄 স্টক রিপোর্ট PDF</button>
         </div>
       </div>
     </div>
@@ -464,7 +463,6 @@
           আপনার সমস্ত স্টক, বিক্রয় এবং বাকি খাতার তথ্য আপনার নিজের ফোনেই সুরক্ষিত থাকে। ব্যাকআপ রাখতে নিচের বাটনে চাপ দিন:
         </p>
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn btn-primary" onclick="exportJSONBackup()">💾 সম্পুর্ণ ডাটা ব্যাকআপ ডাউনলোড (JSON)</button>
           <button class="btn btn-secondary" onclick="exportCSVKhata()">📊 বাকি খাতা Excel / CSV ডাউনলোড</button>
           <button class="btn btn-gold" onclick="openStockReportModal()">📄 বর্তমান স্টক ইনভেন্টরি রিপোর্ট PDF</button>
         </div>
