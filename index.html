@@ -124,18 +124,26 @@
 
     /* Backup page small buttons */
     .backup-mini-btn {
-      padding: 8px 14px;
-      font-size: 12px;
-      border-radius: 6px;
-      background: #e2e8f0;
-      color: #475569;
-      border: 1px solid #cbd5e1;
-      width: auto;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
+      padding: 8px 14px; font-size: 12px; border-radius: 6px;
+      background: #e2e8f0; color: #475569; border: 1px solid #cbd5e1;
+      width: auto; font-weight: 600; cursor: pointer; transition: background 0.15s;
     }
     .backup-mini-btn:hover { background: #cbd5e1; }
+
+    /* Report option box */
+    .report-option {
+      padding: 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #ffffff;
+    }
+    .report-option:hover { border-color: var(--primary); background: #f0fdf4; }
+    .report-option.selected { border-color: var(--primary); background: #f0fdf4; }
+    .report-option strong { font-size: 14px; }
+    .report-option .desc { font-size: 11px; color: #64748b; margin-top: 2px; }
 
     .unit-toggle-group { display: flex; gap: 6px; margin-bottom: 8px; }
 
@@ -170,6 +178,8 @@
       background: #ffffff; max-width: 520px; margin: 20px auto; padding: 22px;
       border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
+
+    .modal-box.wide { max-width: 640px; }
 
     @media print {
       @page { size: A4 portrait; margin: 10mm; }
@@ -463,12 +473,11 @@
           আপনার সমস্ত স্টক, বিক্রয় এবং বাকি খাতার তথ্য আপনার নিজের ফোনেই সুরক্ষিত থাকে। ব্যাকআপ রাখতে নিচের বাটনে চাপ দিন:
         </p>
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn btn-secondary" onclick="exportCSVKhata()">📊 বাকি খাতা Excel / CSV ডাউনলোড</button>
+          <button class="btn btn-secondary" onclick="openDueReportModal()">📄 বাকি রিপোর্ট PDF ডাউনলোড</button>
           <button class="btn btn-gold" onclick="openStockReportModal()">📄 বর্তমান স্টক ইনভেন্টরি রিপোর্ট PDF</button>
         </div>
       </div>
 
-      <!-- ✅ ছোট ব্যাকআপ বাটন — পেজের একদম নিচে, চোখে কম পড়ে -->
       <div style="text-align:center; margin-top:30px; margin-bottom:20px;">
         <button class="backup-mini-btn" onclick="exportJSONBackup()">💾 ডাটা সংরক্ষণ (Backup)</button>
       </div>
@@ -595,6 +604,75 @@
     </div>
   </div>
 
+  <!-- ============================================================ -->
+  <!-- ✅ নতুন: Due Report Builder Modal                           -->
+  <!-- ============================================================ -->
+  <div id="dueReportBuilderModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3 style="font-size:16px; color:var(--primary); border-bottom:2px solid #f1f5f9; padding-bottom:6px; margin-bottom:14px;">
+        📄 বাকি রিপোর্ট তৈরি করুন
+      </h3>
+
+      <!-- Option: All or One -->
+      <label>রিপোর্টের ধরন:</label>
+      <div id="report-type-all" class="report-option selected" onclick="selectReportType('all')">
+        <strong>📚 সব গ্রাহকের বাকি রিপোর্ট</strong>
+        <div class="desc">সব বাকি গ্রাহকের সারসংক্ষেপ এক PDF-এ</div>
+      </div>
+      <div id="report-type-one" class="report-option" onclick="selectReportType('one')">
+        <strong>👤 একজন নির্দিষ্ট গ্রাহকের খাতা</strong>
+        <div class="desc">তার পূর্ণ লেনদেন — পণ্য, জমা, বাকি</div>
+      </div>
+
+      <!-- Customer select (only for one) -->
+      <div id="report-cust-wrap" style="display:none; margin-top:8px;">
+        <div class="form-group">
+          <label>গ্রাহক নির্বাচন করুন *</label>
+          <select id="report-cust-select">
+            <option value="">-- গ্রাহক বাছুন --</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Date range (both types) -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px;">
+        <div class="form-group">
+          <label>তারিখ থেকে (ঐচ্ছিক)</label>
+          <input type="date" id="report-date-from">
+        </div>
+        <div class="form-group">
+          <label>তারিখ পর্যন্ত (ঐচ্ছিক)</label>
+          <input type="date" id="report-date-to">
+        </div>
+      </div>
+      <p style="font-size:11px; color:#64748b; margin-bottom:12px;">
+        ⓘ তারিখ ফাঁকা রাখলে সব সময়ের হিসাব দেখাবে।
+      </p>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-secondary" onclick="closeDueReportModal()">বাতিল</button>
+        <button class="btn btn-primary" onclick="buildDueReport()">📄 রিপোর্ট তৈরি করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ✅ নতুন: Due Report Preview Modal                           -->
+  <!-- ============================================================ -->
+  <div id="dueReportModal" class="modal-backdrop">
+    <div class="modal-box print-area" style="max-width:680px;">
+      <div id="due-report-content" style="background:#ffffff; padding:12px; border-radius:6px;">
+        <!-- content injected -->
+      </div>
+
+      <div class="no-print" style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px;">
+        <button class="btn btn-sm btn-gold" onclick="downloadDueReportPDF()">📥 সরাসরি PDF ডাউনলোড</button>
+        <button class="btn btn-sm btn-primary" onclick="window.print()">🖨️ প্রিন্ট / Save as PDF</button>
+        <button class="btn btn-sm btn-secondary" onclick="closeDueReportPreview()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -618,6 +696,10 @@
     let selectedUnitType = 'pcs';
     let prodToDeleteId = null;
     let newProdType = 'pcs';
+
+    // Due report state
+    let reportType = 'all';
+    let lastDueReportHTML = '';
 
     const textToType = "মেসার্স এস.এম. ট্রেডার্স";
     let typeIdx = 0;
@@ -1293,28 +1375,252 @@
       }
     }
 
+    // ============================================================
+    // ✅ নতুন: Due Report Builder logic
+    // ============================================================
+    function openDueReportModal() {
+      // Populate customer dropdown
+      const custSel = document.getElementById('report-cust-select');
+      const allNames = [...new Set(sales.map(s => s.customer))].sort();
+      custSel.innerHTML = '<option value="">-- গ্রাহক বাছুন --</option>' +
+        allNames.map(n => `<option value="${n}">${n}</option>`).join('');
+
+      // Reset
+      selectReportType('all');
+      document.getElementById('report-date-from').value = '';
+      document.getElementById('report-date-to').value = '';
+
+      document.getElementById('dueReportBuilderModal').style.display = 'block';
+    }
+
+    function closeDueReportModal() {
+      document.getElementById('dueReportBuilderModal').style.display = 'none';
+    }
+
+    function selectReportType(type) {
+      reportType = type;
+      document.getElementById('report-type-all').classList.toggle('selected', type === 'all');
+      document.getElementById('report-type-one').classList.toggle('selected', type === 'one');
+      document.getElementById('report-cust-wrap').style.display = (type === 'one') ? 'block' : 'none';
+    }
+
+    function buildDueReport() {
+      const dateFrom = document.getElementById('report-date-from').value;
+      const dateTo = document.getElementById('report-date-to').value;
+
+      if (reportType === 'one') {
+        const custName = document.getElementById('report-cust-select').value;
+        if (!custName) return alert("গ্রাহক নির্বাচন করুন!");
+        buildSingleCustomerReport(custName, dateFrom, dateTo);
+      } else {
+        buildAllDueReport(dateFrom, dateTo);
+      }
+
+      closeDueReportModal();
+      document.getElementById('dueReportModal').style.display = 'block';
+    }
+
+    function buildAllDueReport(dateFrom, dateTo) {
+      // Gather per-customer summary in date range
+      const customerMap = {};
+      sales.forEach(s => {
+        if (dateFrom && s.date < dateFrom) return;
+        if (dateTo && s.date > dateTo) return;
+        if (!customerMap[s.customer]) customerMap[s.customer] = { total: 0, paid: 0, count: 0 };
+        customerMap[s.customer].total += (s.total || 0);
+        customerMap[s.customer].paid += (s.paid || 0);
+        customerMap[s.customer].count += 1;
+      });
+
+      const customers = Object.entries(customerMap)
+        .map(([name, v]) => ({ name, ...v, due: v.total - v.paid }))
+        .sort((a, b) => b.due - a.due);
+
+      let grandTotal = 0, grandPaid = 0, grandDue = 0;
+
+      const rowsHtml = customers.map((c, i) => {
+        grandTotal += c.total;
+        grandPaid += c.paid;
+        grandDue += c.due;
+        const dueColor = c.due > 0 ? '#dc2626' : '#059669';
+        return `
+          <tr>
+            <td>${i + 1}</td>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.count}</td>
+            <td>${c.total} ৳</td>
+            <td>${c.paid} ৳</td>
+            <td style="color:${dueColor}; font-weight:bold;">${c.due} ৳</td>
+          </tr>
+        `;
+      }).join('');
+
+      const rangeLabel = (dateFrom || dateTo)
+        ? `${dateFrom || 'শুরু'} → ${dateTo || 'আজ'}`
+        : 'সম্পূর্ণ হিসাব (সব তারিখ)';
+
+      lastDueReportHTML = `
+        <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
+          <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+          <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
+          <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+          <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:4px; border-radius:4px; color:#1e293b;">
+            সব গ্রাহকের বাকি রিপোর্ট — ${rangeLabel}
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>নং</th>
+              <th>গ্রাহক</th>
+              <th>লেনদেন সংখ্যা</th>
+              <th>মোট বিল</th>
+              <th>মোট জমা</th>
+              <th>বাকি</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml || '<tr><td colspan="6" style="text-align:center; color:#64748b;">কোনো লেনদেন পাওয়া যায়নি।</td></tr>'}
+          </tbody>
+          <tfoot>
+            <tr style="font-weight:bold; background:#f8fafc;">
+              <td colspan="3" style="text-align:right;">সর্বমোট:</td>
+              <td>${grandTotal} ৳</td>
+              <td>${grandPaid} ৳</td>
+              <td style="color:#dc2626;">${grandDue} ৳</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px;">
+          <span>হিসাব প্রস্তুতকারক</span>
+          <span>মালিক / প্রোপ্রাইটরের স্বাক্ষর</span>
+        </div>
+      `;
+
+      document.getElementById('due-report-content').innerHTML = lastDueReportHTML;
+    }
+
+    function buildSingleCustomerReport(custName, dateFrom, dateTo) {
+      // Sort records by date ascending
+      let records = sales.filter(s => s.customer === custName);
+      records = records.filter(s => {
+        if (dateFrom && s.date < dateFrom) return false;
+        if (dateTo && s.date > dateTo) return false;
+        return true;
+      }).sort((a, b) => a.date.localeCompare(b.date));
+
+      let runningTotal = 0, runningPaid = 0;
+
+      // Build detailed rows
+      const rows = records.map((r, i) => {
+        runningTotal += (r.total || 0);
+        runningPaid += (r.paid || 0);
+        const runningDue = runningTotal - runningPaid;
+        const isOld = r.isOldDue ? '<span style="color:#d97706; font-size:10px;">(পুরাতন)</span> ' : '';
+
+        // Build product detail
+        let productDetail = '';
+        if (r.items && r.items.length > 0) {
+          productDetail = r.items.map(it => {
+            const qtyLabel = it.unitType === 'ctn' ? `${it.qty} কার্টন (${it.totalPcs} পিস)` : `${it.qty} পিস`;
+            return `${it.name} — ${qtyLabel} × ${it.price}৳ = ${it.total}৳`;
+          }).join('<br>');
+        } else {
+          productDetail = r.productName || '-';
+        }
+
+        return `
+          <tr>
+            <td>${i + 1}</td>
+            <td style="white-space:nowrap;">${r.date}</td>
+            <td style="font-size:11px;">${isOld}${productDetail}</td>
+            <td>${r.total || 0} ৳</td>
+            <td>${r.paid || 0} ৳</td>
+            <td style="color:${runningDue > 0 ? '#dc2626' : '#059669'}; font-weight:bold;">${runningDue} ৳</td>
+          </tr>
+        `;
+      }).join('');
+
+      const finalDue = runningTotal - runningPaid;
+      const rangeLabel = (dateFrom || dateTo)
+        ? `${dateFrom || 'শুরু'} → ${dateTo || 'আজ'}`
+        : 'সম্পূর্ণ খাতা (সব তারিখ)';
+
+      lastDueReportHTML = `
+        <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
+          <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+          <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
+          <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+          <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:4px; border-radius:4px; color:#1e293b;">
+            গ্রাহক খাতা: <span style="color:#1b4d3e;">${custName}</span> — ${rangeLabel}
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>নং</th>
+              <th>তারিখ</th>
+              <th>বিবরণ</th>
+              <th>মোট</th>
+              <th>জমা</th>
+              <th>বাকি</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows || '<tr><td colspan="6" style="text-align:center; color:#64748b;">এই তারিখে কোনো লেনদেন নেই।</td></tr>'}
+          </tbody>
+          <tfoot>
+            <tr style="font-weight:bold; background:#f8fafc;">
+              <td colspan="3" style="text-align:right;">সর্বমোট:</td>
+              <td>${runningTotal} ৳</td>
+              <td>${runningPaid} ৳</td>
+              <td style="color:${finalDue > 0 ? '#dc2626' : '#059669'};">${finalDue} ৳</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px;">
+          <span>ক্রেতার স্বাক্ষর</span>
+          <span>বিক্রেতার স্বাক্ষর</span>
+        </div>
+      `;
+
+      document.getElementById('due-report-content').innerHTML = lastDueReportHTML;
+    }
+
+    function downloadDueReportPDF() {
+      const element = document.getElementById('due-report-content');
+      const dateStr = new Date().toISOString().split('T')[0];
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `SM_Traders_Due_Report_${dateStr}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (window.html2pdf) {
+        html2pdf().set(opt).from(element).save();
+      } else {
+        window.print();
+      }
+    }
+
+    function closeDueReportPreview() {
+      document.getElementById('dueReportModal').style.display = 'none';
+    }
+
     function exportJSONBackup() {
       const data = { products, sales };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `SM_Traders_Backup_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-    }
-
-    function exportCSVKhata() {
-      const names = [...new Set(sales.map(s => s.customer))];
-      let csv = '\uFEFFগ্রাহকের নাম,মোট ক্রয় (টাকা),মোট জমা (টাকা),বর্তমান বাকি (টাকা)\n';
-      names.forEach(name => {
-        const records = sales.filter(s => s.customer === name);
-        const t = records.reduce((a,b)=>a+(b.total||0), 0);
-        const p = records.reduce((a,b)=>a+(b.paid||0), 0);
-        csv += `"${name}",${t},${p},${t-p}\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `SM_Traders_Khata_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
     }
   </script>
