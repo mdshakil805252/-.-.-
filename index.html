@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>মেসার্স এস.এম. ট্রেডার্স</title>
+
+  <!-- PWA & Mobile Meta Tags (Relative for GitHub Pages) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1b4d3e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="এস.এম.ট্রেডার্স">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1b4d3e;
+      --primary-dark: #123329;
+      --secondary: #2c7a7b;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', 'Segoe UI', Tahoma, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
+
+    #splash {
+      position: fixed; inset: 0; background: #fffdf5; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; z-index: 9999; text-align: center; padding: 20px; cursor: pointer;
+    }
+    .stamp-box { border: 2px dashed #282566; padding: 25px 30px; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    #typewriter { font-size: 24px; font-weight: bold; color: var(--primary); border-right: 3px solid #282566; white-space: nowrap; overflow: hidden; min-height: 34px; }
+
+    header { background: var(--primary); color: white; padding: 14px 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+    header h2 { font-size: 20px; font-weight: 800; color: #fef08a; }
+    header p { font-size: 12px; opacity: 0.95; margin-top: 2px; }
+
+    nav { display: flex; justify-content: space-around; background: #ffffff; border-bottom: 1px solid #e2e8f0; }
+    nav button { flex: 1; padding: 12px 5px; border: none; background: none; font-weight: 700; font-size: 13px; color: #64748b; cursor: pointer; }
+    nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background-color: #f0fdf4; }
+
+    .container { max-width: 650px; margin: 15px auto; padding: 0 12px; }
+    .card { background: var(--card-bg); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 16px; border: 1px solid #e2e8f0; }
+    .card h3 { font-size: 16px; margin-bottom: 12px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; font-weight: 700; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+    .stat-box { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; text-align: center; }
+    .stat-box span { font-size: 11px; color: #64748b; display: block; }
+    .stat-box strong { font-size: 18px; color: #0f172a; display: block; margin-top: 2px; }
+
+    label { display: block; font-size: 13px; font-weight: 600; margin-top: 10px; color: #475569; }
+    input, select { width: 100%; padding: 9px 12px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; background: #fff; }
+    input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+    .btn { width: 100%; padding: 11px; margin-top: 12px; border: none; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; }
+    .btn-secondary { background: var(--secondary); }
+    .btn-gold { background: var(--gold); color: #0f172a; }
+    .btn-danger { background: var(--danger); }
+    .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; margin: 0; }
+
+    .unit-toggle { display: flex; gap: 6px; margin: 5px 0 8px 0; }
+    .unit-btn { flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; color: #475569; }
+    .unit-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .table-responsive { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table th, table td { border: 1px solid #e2e8f0; padding: 8px 6px; text-align: left; }
+    table th { background: #f8fafc; font-weight: 600; color: #334155; }
+
+    .customer-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+    .customer-item:hover { background: #f8fafc; }
+
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; overflow-y: auto; padding: 15px; }
+    .modal-box { background: #ffffff; max-width: 520px; margin: 20px auto; padding: 22px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; left: 0; top: 0; width: 100%; background: white; margin: 0; padding: 0; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div id="splash" onclick="skipSplash()">
+    <div class="stamp-box">
+      <div id="typewriter"></div>
+      <p id="sub1" style="display:none; font-size: 15px; font-weight:700;">প্রোঃ মোঃ জহিরুল ইসলাম</p>
+      <p id="sub2" style="display:none; font-size: 13px; margin-top: 4px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+      <span style="display:block; margin-top:14px; font-size:11px; color:#6b7280;">(ক্লিক করে সরাসরি অ্যাপে প্রবেশ করুন ➔)</span>
+    </div>
+  </div>
+
+  <header>
+    <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
+    <p>প্রোঃ মোঃ জহিরুল ইসলাম | পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও</p>
+  </header>
+
+  <nav>
+    <button id="tab-btn-dash" class="active" onclick="switchTab('dash')">📊 ড্যাশবোর্ড</button>
+    <button id="tab-btn-stock" onclick="switchTab('stock')">📦 স্টক</button>
+    <button id="tab-btn-sell" onclick="switchTab('sell')">🛒 বিক্রয়</button>
+    <button id="tab-btn-report" onclick="switchTab('report')">📑 বাকি খাতা</button>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Tab 0: Dashboard -->
+    <div id="sec-dash" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span>আজকের মোট বিক্রি</span>
+          <strong id="d-today-sale" style="color:var(--primary);">০ ৳</strong>
+        </div>
+        <div class="stat-box">
+          <span>আজকের নগদ আদায়</span>
+          <strong id="d-today-cash" style="color:#059669;">০ ৳</strong>
+        </div>
+        <div class="stat-box">
+          <span>মার্কেটে মোট বাকি</span>
+          <strong id="d-total-due" style="color:var(--danger);">০ ৳</strong>
+        </div>
+        <div class="stat-box">
+          <span>মোট স্টক আইটেম</span>
+          <strong id="d-stock-count">০ টি</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>দ্রুত কাজ করুন (Quick Shortcuts)</h3>
+        <div style="display:flex; gap:8px;">
+          <button class="btn" onclick="switchTab('sell')">🛒 নতুন বিক্রি / চালান</button>
+          <button class="btn btn-secondary" onclick="switchTab('stock')">📦 পণ্য যোগ</button>
+          <button class="btn btn-gold" onclick="switchTab('report')">📑 টাকা জমা</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>ডাটা ব্যাকআপ ও এক্সেল</h3>
+        <p style="font-size:12px; color:#64748b; margin-bottom:10px;">হিসাব সুরক্ষিত রাখতে নিয়মিত ব্যাকআপ ডাউনলোড করে রাখুন।</p>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportJSONBackup()">📥 JSON ব্যাকআপ</button>
+          <button class="btn btn-sm" onclick="exportCSVKhata()">📊 Excel খাতা</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Stock Section -->
+    <div id="sec-stock" class="tab-content" style="display:none;">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f5f9; padding-bottom:8px; margin-bottom:10px;">
+          <h3 style="margin:0; border:none; padding:0;">স্টক ইনভেন্টরি</h3>
+          <button class="btn btn-sm btn-gold" onclick="openStockReportModal()">📄 স্টক রিপোর্ট PDF / প্রিন্ট</button>
+        </div>
+
+        <h4 style="font-size:14px; color:#334155; margin-bottom:8px;">স্টকে নতুন পণ্য যোগ করুন</h4>
+        <label>পণ্যের নাম *</label>
+        <input type="text" id="p-name" placeholder="যেমন: তীর সয়াবিন তেল (১ লিটার)">
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div>
+            <label>প্রতি কার্টনে পিস</label>
+            <input type="number" id="p-ctn" placeholder="যেমন: ২৪">
+          </div>
+          <div>
+            <label>মজুত পরিমাণ (পিস)</label>
+            <input type="number" id="p-qty" placeholder="যেমন: ১০০">
+          </div>
+        </div>
+
+        <label>প্রতি পিসের বিক্রয় দর (টাকা) *</label>
+        <input type="number" id="p-price" placeholder="যেমন: ১৮৫">
+        
+        <button class="btn" onclick="addStock()">স্টকে যোগ করুন</button>
+      </div>
+
+      <div class="card">
+        <h3>বর্তমান স্টক তালিকা</h3>
+        <input type="text" id="stock-search" oninput="renderStock()" placeholder="পণ্য খুঁজুন..." style="margin-bottom:10px;">
+        <div class="table-responsive">
+          <table id="stock-table">
+            <thead>
+              <tr>
+                <th>পণ্য</th>
+                <th>কার্টন</th>
+                <th>মজুত</th>
+                <th>দর</th>
+                <th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Sell Section -->
+    <div id="sec-sell" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>নতুন বিক্রয় ও চালান</h3>
+        <label>তারিখ *</label>
+        <input type="date" id="s-date">
+        
+        <label>ক্রেতার / গ্রাহকের নাম *</label>
+        <input type="text" id="s-customer" placeholder="গ্রাহকের নাম লিখুন">
+        
+        <label>বিক্রয় ধরন নির্বাচন করুন:</label>
+        <div class="unit-toggle">
+          <button type="button" id="unit-btn-pcs" class="unit-btn active" onclick="setSellMode('pcs')">📦 পিস (Pcs)</button>
+          <button type="button" id="unit-btn-ctn" class="unit-btn" onclick="setSellMode('ctn')">📦 কার্টন (Ctn)</button>
+        </div>
+
+        <label>পণ্য সিলেক্ট করুন</label>
+        <div style="display:flex; gap:6px;">
+          <select id="s-product" style="flex:2;" onchange="updateProductHelp()">
+            <option value="">পণ্য নির্বাচন করুন</option>
+          </select>
+          <input type="number" id="s-qty" value="1" min="0.1" step="any" style="flex:1;" placeholder="পরিমাণ">
+          <button class="btn btn-sm btn-secondary" onclick="addToCart()" style="flex:1;">যোগ</button>
+        </div>
+
+        <div id="product-help-text" style="font-size:11px; color:#475569; margin-top:4px;"></div>
+
+        <!-- Cart Table -->
+        <div style="margin-top:14px;">
+          <h4 style="font-size:13px; font-weight:700; color:#334155;">চালানের পণ্য তালিকা:</h4>
+          <div class="table-responsive">
+            <table id="cart-table">
+              <thead>
+                <tr>
+                  <th>পণ্য</th>
+                  <th>পরিমাণ</th>
+                  <th>দর</th>
+                  <th>মোট</th>
+                  <th>বাদ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="5" style="text-align:center; color:#94a3b8;">কোনো পণ্য যোগ করা হয়নি</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div style="margin-top: 12px; padding: 10px; background: #f1f5f9; border-radius: 6px; font-size:14px;">
+          <p><strong>মোট প্রদেয় বিল: <span id="s-total-display">০</span> ৳</strong></p>
+        </div>
+
+        <label>জমা টাকা (Payment) *</label>
+        <input type="number" id="s-paid" placeholder="কত টাকা পরিশোধ করেছেন" oninput="calculateSellDue()">
+
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <button class="btn btn-sm btn-secondary" onclick="setFullPaid()">পূর্ণ নগদ</button>
+          <button class="btn btn-sm btn-danger" onclick="setFullDue()">পূর্ণ বাকি</button>
+        </div>
+
+        <p style="margin-top: 10px; color: var(--danger); font-weight: bold; font-size:15px;">
+          বাকি টাকা: <span id="s-due-display">০</span> ৳
+        </p>
+
+        <button class="btn" onclick="saveSale()">বিক্রি সম্পন্ন ও মেমো দেখুন</button>
+      </div>
+    </div>
+
+    <!-- Tab 3: Report Section -->
+    <div id="sec-report" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>সকল গ্রাহকের বাকি খাতা</h3>
+        <input type="text" id="cust-search" oninput="renderCustomers()" placeholder="গ্রাহকের নাম বা ফোন খুঁজুন..." style="margin-bottom:10px;">
+        <div id="customer-list"></div>
+      </div>
+
+      <div id="customer-detail-card" class="card" style="display:none;">
+        <h3 id="det-name">গ্রাহকের হিসাব</h3>
+        
+        <div style="background: #fdf6b2; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+          <label style="margin-top:0;">বাকি থেকে টাকা জমা নিন:</label>
+          <div style="display: flex; gap: 8px; margin-top: 5px;">
+            <input type="number" id="quick-pay-amt" placeholder="টাকার পরিমাণ">
+            <button class="btn btn-secondary btn-sm" onclick="addPayment()">জমা</button>
+          </div>
+        </div>
+
+        <h4>ক্রয় ও লেনদেনের ইতিহাস:</h4>
+        <div class="table-responsive">
+          <table id="history-table">
+            <thead>
+              <tr>
+                <th>তারিখ</th>
+                <th>বিবরণ</th>
+                <th>মোট</th>
+                <th>জমা</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 12px; text-align: right; font-size: 15px;">
+          <p><strong>বর্তমান মোট বাকি: <span id="det-due" style="color:var(--danger); font-size:18px;">০</span> ৳</strong></p>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="btn" onclick="generateMemo()">📄 মেমো প্রিন্ট করুন</button>
+          <button class="btn btn-secondary" onclick="copyReminderText()">📱 তাগাদা SMS কপি</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Delete Confirmation Modal (হ্যাঁ / না পপআপ) -->
+  <div id="deleteModal" class="modal-backdrop">
+    <div class="modal-box text-center" style="max-width:380px;">
+      <div style="font-size:36px; margin-bottom:6px;">⚠️</div>
+      <h3 style="font-size:16px; font-weight:bold; color:#0f172a; margin-bottom:6px;">পণ্য মুছে ফেলার নিশ্চয়তা</h3>
+      <p style="font-size:13px; color:#475569; margin-bottom:16px;" id="del-prompt-text">আপনি কি নিশ্চিতভাবে এই পণ্যটি স্টক থেকে মুছে ফেলতে চান?</p>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-sm btn-secondary" style="flex:1;" onclick="closeDeleteModal()">না, বাতিল</button>
+        <button class="btn btn-sm btn-danger" style="flex:1;" onclick="confirmDeleteStock()">হ্যাঁ, মুছে ফেলুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash Memo Modal -->
+  <div id="memoModal" class="modal-backdrop">
+    <div class="modal-box print-area">
+      <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
+        <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+        <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+        <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
+        <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+        <hr style="margin: 8px 0; border: 0.5px solid #ccc;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; text-align: left;">
+          <span><strong>গ্রাহক:</strong> <span id="m-cust"></span></span>
+          <span><strong>তারিখ:</strong> <span id="m-date"></span></span>
+        </div>
+      </div>
+
+      <table id="memo-table">
+        <thead>
+          <tr><th>নং</th><th>বিবরণ</th><th>পরিমাণ</th><th>দর</th><th>মোট</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top: 15px; font-size: 13px; line-height: 1.8; text-align: right;">
+        <p>মোট টাকা: <strong><span id="m-total">০</span> ৳</strong></p>
+        <p>নগদ জমা: <strong><span id="m-paid">০</span> ৳</strong></p>
+        <p style="border-top: 1px solid #333; display: inline-block; padding-left: 20px; color:var(--danger);">
+          বর্তমান বাকি: <strong><span id="m-due">০</span> ৳</strong>
+        </p>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px;">
+        <span>ক্রেতার স্বাক্ষর</span>
+        <span>বিক্রেতার স্বাক্ষর</span>
+      </div>
+
+      <div class="no-print" style="margin-top: 20px; display: flex; gap: 8px;">
+        <button class="btn btn-sm btn-gold" onclick="window.print()">🖨️ প্রিন্ট / PDF সংরক্ষণ</button>
+        <button class="btn btn-sm btn-secondary" onclick="closeMemo()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Report Modal -->
+  <div id="stockReportModal" class="modal-backdrop">
+    <div class="modal-box print-area" style="max-width:620px;">
+      <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
+        <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+        <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+        <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
+        <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+        <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:3px; border-radius:4px;">
+          বর্তমান স্টক ইনভেন্টরি ও মজুত রিপোর্ট
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table id="stock-report-table">
+          <thead>
+            <tr>
+              <th>নং</th>
+              <th>পণ্য</th>
+              <th>কার্টন সাইজ</th>
+              <th>কার্টন হিসাব</th>
+              <th>মোট পিস</th>
+              <th>বিক্রয় দর</th>
+              <th>মোট মূল্য</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr style="font-weight:bold; background:#f8fafc;">
+              <td colspan="4" style="text-align:right;">সর্বমোট:</td>
+              <td id="sr-total-pcs">০</td>
+              <td>-</td>
+              <td id="sr-total-val" style="color:#059669;">০ ৳</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div style="margin-top: 35px; display: flex; justify-content: space-between; font-size: 12px;">
+        <span>হিসাব প্রস্তুতকারক</span>
+        <span>মালিক / প্রোপ্রাইটরের স্বাক্ষর</span>
+      </div>
+
+      <div class="no-print" style="margin-top: 20px; display: flex; gap: 8px;">
+        <button class="btn btn-sm btn-gold" onclick="window.print()">🖨️ প্রিন্ট / PDF সংরক্ষণ</button>
+        <button class="btn btn-sm btn-secondary" onclick="closeStockReportModal()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    let products = JSON.parse(localStorage.getItem('sm_products')) || [
+      { id: '1', name: 'তীর সয়াবিন তেল (১ লিটার)', ctn: 12, qty: 60, price: 185 },
+      { id: '2', name: 'লাক্স সাবান (১০০ গ্রাম)', ctn: 72, qty: 120, price: 65 },
+      { id: '3', name: 'মিনিকেট চাল (৫০ কেজি বস্তা)', ctn: 1, qty: 25, price: 3400 }
+    ];
+
+    let sales = JSON.parse(localStorage.getItem('sm_sales')) || [];
+    let cart = [];
+    let activeCustomer = null;
+    let currentSellMode = 'pcs';
+    let productToDeleteId = null;
+
+    const titleText = "মেসার্স এস.এম. ট্রেডার্স";
+    let charIdx = 0;
+    function typeEffect() {
+      if (charIdx < titleText.length) {
+        document.getElementById("typewriter").innerHTML += titleText.charAt(charIdx);
+        charIdx++;
+        setTimeout(typeEffect, 70);
+      } else {
+        document.getElementById("sub1").style.display = "block";
+        document.getElementById("sub2").style.display = "block";
+        setTimeout(() => { skipSplash(); }, 1200);
+      }
+    }
+
+    function skipSplash() {
+      const splash = document.getElementById("splash");
+      if(splash) splash.style.display = "none";
+    }
+
+    window.onload = function() {
+      typeEffect();
+      document.getElementById('s-date').valueAsDate = new Date();
+      renderStock();
+      populateProductSelect();
+      updateDashboard();
+    };
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('sec-' + tab).style.display = 'block';
+      document.getElementById('tab-btn-' + tab).classList.add('active');
+
+      if(tab === 'dash') updateDashboard();
+      if(tab === 'report') renderCustomers();
+      if(tab === 'stock') renderStock();
+    }
+
+    function updateDashboard() {
+      const today = new Date().toISOString().split('T')[0];
+      const todaySales = sales.filter(s => s.date === today);
+      const todayTotal = todaySales.reduce((a, b) => a + (b.total || 0), 0);
+      const todayCash = todaySales.reduce((a, b) => a + (b.paid || 0), 0);
+
+      const allTotal = sales.reduce((a, b) => a + (b.total || 0), 0);
+      const allPaid = sales.reduce((a, b) => a + (b.paid || 0), 0);
+      const totalDue = Math.max(0, allTotal - allPaid);
+
+      document.getElementById('d-today-sale').innerText = todayTotal + " ৳";
+      document.getElementById('d-today-cash').innerText = todayCash + " ৳";
+      document.getElementById('d-total-due').innerText = totalDue + " ৳";
+      document.getElementById('d-stock-count').innerText = products.length + " টি";
+    }
+
+    function addStock() {
+      const name = document.getElementById('p-name').value.trim();
+      const ctn = document.getElementById('p-ctn').value;
+      const qty = parseFloat(document.getElementById('p-qty').value) || 0;
+      const price = parseFloat(document.getElementById('p-price').value);
+
+      if (!name || isNaN(price)) return alert("পণ্যের নাম ও সঠিক বিক্রয় মূল্য দিন!");
+
+      products.push({ id: Date.now().toString(), name, ctn, qty, price });
+      localStorage.setItem('sm_products', JSON.stringify(products));
+      
+      document.getElementById('p-name').value = '';
+      document.getElementById('p-ctn').value = '';
+      document.getElementById('p-qty').value = '';
+      document.getElementById('p-price').value = '';
+
+      renderStock();
+      populateProductSelect();
+      alert("পণ্য স্টকে সফলভাবে যুক্ত হয়েছে!");
+    }
+
+    function renderStock() {
+      const tbody = document.querySelector('#stock-table tbody');
+      const search = (document.getElementById('stock-search')?.value || '').toLowerCase();
+      const list = products.filter(p => p.name.toLowerCase().includes(search));
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো পণ্য পাওয়া যায়নি</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => `
+        <tr>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.ctn ? p.ctn + ' পিস' : '-'}</td>
+          <td><span style="font-weight:bold; color:${(p.qty||0)<10?'var(--danger)':'#059669'};">${p.qty || 0} পিস</span></td>
+          <td>${p.price} ৳</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" onclick="restockItem('${p.id}')">+১০</button>
+            <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${p.id}')">মুছুন</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function restockItem(id) {
+      const p = products.find(x => x.id === id);
+      if(p) {
+        p.qty = (p.qty || 0) + 10;
+        localStorage.setItem('sm_products', JSON.stringify(products));
+        renderStock();
+      }
+    }
+
+    function openDeleteModal(id) {
+      const p = products.find(x => x.id === id);
+      if(!p) return;
+      productToDeleteId = id;
+      document.getElementById('del-prompt-text').innerHTML = `আপনি কি নিশ্চিতভাবে '<strong>${p.name}</strong>' পণ্যটি স্টক তালিকা থেকে সম্পূর্ণ মুছে ফেলতে চান?`;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+      productToDeleteId = null;
+      document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    function confirmDeleteStock() {
+      if(!productToDeleteId) return;
+      products = products.filter(p => p.id !== productToDeleteId);
+      localStorage.setItem('sm_products', JSON.stringify(products));
+      renderStock();
+      populateProductSelect();
+      closeDeleteModal();
+    }
+
+    function populateProductSelect() {
+      const select = document.getElementById('s-product');
+      select.innerHTML = '<option value="">পণ্য নির্বাচন করুন</option>' + 
+        products.map(p => `<option value="${p.id}">${p.name} (${p.price} ৳ / ${p.ctn ? p.ctn+' pcs/ctn':''})</option>`).join('');
+    }
+
+    function setSellMode(mode) {
+      currentSellMode = mode;
+      document.getElementById('unit-btn-pcs').className = mode === 'pcs' ? 'unit-btn active' : 'unit-btn';
+      document.getElementById('unit-btn-ctn').className = mode === 'ctn' ? 'unit-btn active' : 'unit-btn';
+      updateProductHelp();
+    }
+
+    function updateProductHelp() {
+      const sel = document.getElementById('s-product');
+      const prod = products.find(p => p.id === sel.value);
+      const help = document.getElementById('product-help-text');
+      if (!prod) { help.innerHTML = ''; return; }
+
+      const pcsPerCtn = Number(prod.ctn) || 1;
+      if (currentSellMode === 'ctn') {
+        help.innerHTML = `📦 ১ কার্টনে = <strong>${pcsPerCtn} পিস</strong> | প্রতি কার্টন দর: <strong>${pcsPerCtn * prod.price} ৳</strong> (মজুত: ${prod.qty || 0} পিস)`;
+      } else {
+        help.innerHTML = `📦 প্রতি পিস দর: <strong>${prod.price} ৳</strong> (মজুত: ${prod.qty || 0} পিস)`;
+      }
+    }
+
+    function addToCart() {
+      const sel = document.getElementById('s-product');
+      const id = sel.value;
+      const inputQty = parseFloat(document.getElementById('s-qty').value) || 1;
+      if (!id) return alert("পণ্য নির্বাচন করুন!");
+
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+
+      const pcsPerCtn = Number(prod.ctn) || 1;
+      let actualPcs = inputQty;
+      let label = `${prod.name}`;
+
+      if (currentSellMode === 'ctn') {
+        actualPcs = inputQty * pcsPerCtn;
+        label = `${prod.name} (${inputQty} কার্টন / ${actualPcs} পিস)`;
+      } else {
+        label = `${prod.name} (${inputQty} পিস)`;
+      }
+
+      const total = actualPcs * prod.price;
+
+      cart.push({
+        id: prod.id,
+        name: label,
+        price: prod.price,
+        qty: inputQty,
+        unitType: currentSellMode,
+        actualPcs: actualPcs,
+        total: total
+      });
+
+      renderCart();
+      sel.value = '';
+      document.getElementById('s-qty').value = '1';
+      document.getElementById('product-help-text').innerHTML = '';
+    }
+
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      const tbody = document.querySelector('#cart-table tbody');
+      if (cart.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8;">কোনো পণ্য যোগ করা হয়নি</td></tr>';
+        document.getElementById('s-total-display').innerText = '০';
+        document.getElementById('s-due-display').innerText = '০';
+        return;
+      }
+
+      tbody.innerHTML = cart.map((it, idx) => `
+        <tr>
+          <td>${it.name}</td>
+          <td>${it.unitType === 'ctn' ? it.qty + ' কার্টন' : it.qty + ' পিস'}</td>
+          <td>${it.price} ৳</td>
+          <td><strong>${it.total} ৳</strong></td>
+          <td><button class="btn btn-danger btn-sm" onclick="removeFromCart(${idx})">×</button></td>
+        </tr>
+      `).join('');
+
+      const total = cart.reduce((a, b) => a + b.total, 0);
+      document.getElementById('s-total-display').innerText = total;
+      calculateSellDue();
+    }
+
+    function calculateSellDue() {
+      const total = cart.reduce((a, b) => a + b.total, 0);
+      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+      document.getElementById('s-due-display').innerText = Math.max(0, total - paid);
+    }
+
+    function setFullPaid() {
+      const total = cart.reduce((a, b) => a + b.total, 0);
+      document.getElementById('s-paid').value = total;
+      calculateSellDue();
+    }
+
+    function setFullDue() {
+      document.getElementById('s-paid').value = 0;
+      calculateSellDue();
+    }
+
+    function saveSale() {
+      const date = document.getElementById('s-date').value;
+      const customer = document.getElementById('s-customer').value.trim();
+      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+
+      if (!customer) return alert("গ্রাহকের নাম লিখুন!");
+      if (cart.length === 0) return alert("কমপক্ষে একটি পণ্য যোগ করুন!");
+
+      const total = cart.reduce((a, b) => a + b.total, 0);
+
+      cart.forEach(item => {
+        const prod = products.find(p => p.id === item.id);
+        if(prod) prod.qty = Math.max(0, (prod.qty || 0) - (item.actualPcs || item.qty));
+      });
+      localStorage.setItem('sm_products', JSON.stringify(products));
+
+      sales.push({
+        id: Date.now().toString(),
+        date,
+        customer,
+        items: [...cart],
+        productName: cart.map(c => c.name).join(', '),
+        total,
+        paid
+      });
+
+      localStorage.setItem('sm_sales', JSON.stringify(sales));
+
+      alert("বিক্রি সফলভাবে সম্পন্ন হয়েছে!");
+      activeCustomer = customer;
+      generateMemoFromCart(customer, date, cart, total, paid);
+
+      cart = [];
+      renderCart();
+      document.getElementById('s-customer').value = '';
+      document.getElementById('s-paid').value = '';
+    }
+
+    function renderCustomers() {
+      const listDiv = document.getElementById('customer-list');
+      const search = (document.getElementById('cust-search')?.value || '').toLowerCase();
+      const customerNames = [...new Set(sales.map(s => s.customer))].filter(n => n.toLowerCase().includes(search));
+
+      if (customerNames.length === 0) {
+        listDiv.innerHTML = "<p style='color:#64748b; padding:10px;'>কোনো গ্রাহকের হিসাব পাওয়া যায়নি।</p>";
+        document.getElementById('customer-detail-card').style.display = 'none';
+        return;
+      }
+
+      listDiv.innerHTML = customerNames.map(name => {
+        const custSales = sales.filter(s => s.customer === name);
+        const total = custSales.reduce((a, b) => a + (b.total || 0), 0);
+        const paid = custSales.reduce((a, b) => a + (b.paid || 0), 0);
+        const due = total - paid;
+        return `
+          <div class="customer-item" onclick="viewCustomer('${name}')">
+            <div>
+              <strong>${name}</strong>
+              <div style="font-size:12px; color:#64748b;">মোট ক্রয়: ${total} ৳</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="color:${due > 0 ? 'var(--danger)' : '#059669'}; font-weight:bold;">
+                ${due > 0 ? 'বাকি: ' + due : 'পরিশোধ'} ৳
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function viewCustomer(name) {
+      activeCustomer = name;
+      document.getElementById('customer-detail-card').style.display = 'block';
+      document.getElementById('det-name').innerText = name + "-এর খাতা";
+      
+      const records = sales.filter(s => s.customer === name);
+      const tbody = document.querySelector('#history-table tbody');
+      
+      let totalAll = 0, paidAll = 0;
+      tbody.innerHTML = records.map(r => {
+        totalAll += (r.total || 0);
+        paidAll += (r.paid || 0);
+        return `
+          <tr>
+            <td>${r.date}</td>
+            <td>${r.productName || 'নগদ জমা'}</td>
+            <td>${r.total || 0}</td>
+            <td>${r.paid || 0}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('det-due').innerText = totalAll - paidAll;
+    }
+
+    function addPayment() {
+      const amt = parseFloat(document.getElementById('quick-pay-amt').value);
+      if (!amt || !activeCustomer) return alert("সঠিক টাকার পরিমাণ লিখুন!");
+
+      sales.push({
+        id: Date.now().toString(),
+        date: new Date().toISOString().split('T')[0],
+        customer: activeCustomer,
+        productName: "নগদ টাকা জমা",
+        items: [],
+        total: 0,
+        paid: amt
+      });
+
+      localStorage.setItem('sm_sales', JSON.stringify(sales));
+      document.getElementById('quick-pay-amt').value = '';
+      viewCustomer(activeCustomer);
+      alert("টাকা জমা সফল হয়েছে!");
+    }
+
+    function copyReminderText() {
+      if(!activeCustomer) return;
+      const records = sales.filter(s => s.customer === activeCustomer);
+      const total = records.reduce((a, b) => a + (b.total || 0), 0);
+      const paid = records.reduce((a, b) => a + (b.paid || 0), 0);
+      const due = total - paid;
+
+      const txt = `সম্মানিত গ্রাহক ${activeCustomer},\nমেসার্স এস.এম. ট্রেডার্স-এ আপনার বর্তমান বকেয়া বাকি: ${due} ৳।\nবাকি টাকা দ্রুত পরিশোধের জন্য অনুরোধ করা হলো।\nধন্যবাদ - প্রোঃ মোঃ জহিরুল ইসলাম (রুহিয়া, ঠাকুরগাঁও)`;
+      navigator.clipboard.writeText(txt);
+      alert("বাকি তাগাদা SMS কপি হয়েছে!");
+    }
+
+    function generateMemoFromCart(cust, date, items, total, paid) {
+      document.getElementById('m-cust').innerText = cust;
+      document.getElementById('m-date').innerText = date;
+      const tbody = document.querySelector('#memo-table tbody');
+
+      tbody.innerHTML = items.map((it, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td>${it.name}</td>
+          <td>${it.unitType === 'ctn' ? it.qty + ' কার্টন' : it.qty + ' পিস'}</td>
+          <td>${it.price}</td>
+          <td>${it.total}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('m-total').innerText = total;
+      document.getElementById('m-paid').innerText = paid;
+      document.getElementById('m-due').innerText = Math.max(0, total - paid);
+      document.getElementById('memoModal').style.display = 'block';
+    }
+
+    function generateMemo() {
+      if(!activeCustomer) return;
+      const records = sales.filter(s => s.customer === activeCustomer);
+      const total = records.reduce((a, b) => a + (b.total || 0), 0);
+      const paid = records.reduce((a, b) => a + (b.paid || 0), 0);
+
+      document.getElementById('m-cust').innerText = activeCustomer;
+      document.getElementById('m-date').innerText = new Date().toLocaleDateString('bn-BD');
+      const tbody = document.querySelector('#memo-table tbody');
+
+      tbody.innerHTML = records.map((r, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td>${r.productName}</td>
+          <td>${r.items?.length || 1}</td>
+          <td>-</td>
+          <td>${r.total}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('m-total').innerText = total;
+      document.getElementById('m-paid').innerText = paid;
+      document.getElementById('m-due').innerText = total - paid;
+      document.getElementById('memoModal').style.display = 'block';
+    }
+
+    function closeMemo() {
+      document.getElementById('memoModal').style.display = 'none';
+    }
+
+    function openStockReportModal() {
+      const tbody = document.querySelector('#stock-report-table tbody');
+      let totalPcs = 0;
+      let totalValue = 0;
+
+      tbody.innerHTML = products.map((p, i) => {
+        const ctnPcs = Number(p.ctn) || 0;
+        const qty = p.qty || 0;
+        totalPcs += qty;
+        const val = qty * p.price;
+        totalValue += val;
+
+        let breakdown = '-';
+        if (ctnPcs > 0) {
+          const ctns = Math.floor(qty / ctnPcs);
+          const rem = qty % ctnPcs;
+          breakdown = `${ctns} কার্টন ${rem > 0 ? '+ ' + rem + ' পিস' : ''}`;
+        }
+
+        return `
+          <tr>
+            <td>${i+1}</td>
+            <td><strong>${p.name}</strong></td>
+            <td>${ctnPcs > 0 ? ctnPcs + ' পিস' : '-'}</td>
+            <td>${breakdown}</td>
+            <td>${qty} পিস</td>
+            <td>${p.price} ৳</td>
+            <td><strong>${val} ৳</strong></td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('sr-total-pcs').innerText = totalPcs + ' পিস';
+      document.getElementById('sr-total-val').innerText = totalValue + ' ৳';
+      document.getElementById('stockReportModal').style.display = 'block';
+    }
+
+    function closeStockReportModal() {
+      document.getElementById('stockReportModal').style.display = 'none';
+    }
+
+    function exportJSONBackup() {
+      const data = { products, sales };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `SM_Traders_Backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+
+    function exportCSVKhata() {
+      const names = [...new Set(sales.map(s => s.customer))];
+      let csv = '\uFEFFগ্রাহকের নাম,মোট ক্রয় (টাকা),মোট জমা (টাকা),বর্তমান বাকি (টাকা)\n';
+      names.forEach(name => {
+        const records = sales.filter(s => s.customer === name);
+        const t = records.reduce((a,b)=>a+(b.total||0), 0);
+        const p = records.reduce((a,b)=>a+(b.paid||0), 0);
+        csv += `"${name}",${t},${p},${t-p}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `SM_Traders_Khata_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
