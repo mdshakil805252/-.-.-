@@ -1,12 +1,9 @@
-/* ================================================
-   মেসার্স এস.এম. ট্রেডার্স - Service Worker
-   ভার্সন: v2 (HTML আপডেট করলে এই নম্বর বাড়ান)
-   ================================================ */
+/* মেসার্স এস.এম. ট্রেডার্স - Service Worker
+   HTML আপডেট করলে ভার্সন নম্বর (v3) বাড়ান → v4, v5 ... */
 
-const CACHE_NAME = 'sm-traders-v2';
-const RUNTIME_CACHE = 'sm-traders-runtime-v2';
+const CACHE_NAME = 'sm-traders-v3';
+const RUNTIME_CACHE = 'sm-traders-runtime-v3';
 
-// অ্যাপের মূল ফাইলগুলো (অফলাইনে চালানোর জন্য)
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -14,24 +11,16 @@ const CORE_ASSETS = [
   './icon.svg'
 ];
 
-// ─────────────────────────────────────────────
-// ১. Install — কোর ফাইল ক্যাশ করা
-// ─────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(CORE_ASSETS).catch((err) => {
-          console.warn('কিছু কোর ফাইল ক্যাশ হয়নি:', err);
-        });
-      })
+      .then((cache) => cache.addAll(CORE_ASSETS).catch((err) => {
+        console.warn('কিছু কোর ফাইল ক্যাশ হয়নি:', err);
+      }))
       .then(() => self.skipWaiting())
   );
 });
 
-// ─────────────────────────────────────────────
-// ২. Activate — পুরানো ক্যাশ মুছে ফেলা
-// ─────────────────────────────────────────────
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -47,16 +36,10 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// ─────────────────────────────────────────────
-// ৩. Fetch — রিকোয়েস্ট হ্যান্ডেল
-// ─────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-
-  // শুধু GET রিকোয়েস্ট হ্যান্ডেল করব
   if (req.method !== 'GET') return;
 
-  // HTML / নেভিগেশন রিকোয়েস্ট → Network First (নতুন আপডেট পেতে)
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(
       fetch(req)
@@ -70,7 +53,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // CDN (fonts, html2pdf) → Cache First
   if (req.url.includes('cdnjs.cloudflare.com') || req.url.includes('fonts.g')) {
     event.respondWith(
       caches.match(req).then((cached) => {
@@ -87,7 +69,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // বাকি সব (CSS/JS/Icon) → Cache First, fallback Network
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
@@ -98,7 +79,6 @@ self.addEventListener('fetch', (event) => {
         }
         return res;
       }).catch(() => {
-        // যদি offline-এ থাকে এবং HTML চায় → index.html দাও
         if (req.headers.get('accept') && req.headers.get('accept').includes('text/html')) {
           return caches.match('./index.html');
         }
@@ -107,16 +87,9 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// ─────────────────────────────────────────────
-// ৪. মেসেজ — App থেকে ক্যাশ ক্লিয়ার/আপডেট
-// ─────────────────────────────────────────────
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
   if (event.data && event.data.type === 'CLEAR_CACHE') {
-    caches.keys().then((names) => {
-      names.forEach((name) => caches.delete(name));
-    });
+    caches.keys().then((names) => names.forEach((name) => caches.delete(name)));
   }
 });
