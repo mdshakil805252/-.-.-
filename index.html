@@ -63,7 +63,9 @@
     nav {
       display: flex; justify-content: space-around; background: #ffffff;
       border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-      touch-action: pan-y; user-select: none; -webkit-user-select: none;
+      user-select: none; -webkit-user-select: none;
+      /* ✅ swipe detection এর জন্য জরুরি */
+      touch-action: pan-y;
     }
 
     nav button {
@@ -214,7 +216,6 @@
     </div>
   </div>
 
-  <!-- ✅ ফোন নম্বর সরানো হয়েছে — শুধু প্রোপ্রাইটর ও এলাকা -->
   <header>
     <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
     <p>কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
@@ -697,9 +698,10 @@
     let lastDueReportHTML = '';
     let currentSellProduct = null;
 
+    // ✅ Tab system — clean implementation
     const TAB_ORDER = ['dashboard', 'sell', 'stock', 'due', 'reports'];
     let currentTab = 'dashboard';
-    let isNavigatingBack = false;
+    let isInternalNav = false; // true হলে popstate থেকে ignore করবে
 
     const textToType = "মেসার্স এস.এম. ট্রেডার্স";
     let typeIdx = 0;
@@ -726,44 +728,55 @@
       typeEffect();
       renderAll();
 
+      // Initial state
       const params = new URLSearchParams(window.location.search);
       let initialTab = params.get('tab');
       if (!initialTab) {
         if (params.get('sell')) initialTab = 'sell';
         else if (params.get('due')) initialTab = 'due';
       }
-      if (initialTab && TAB_ORDER.includes(initialTab)) {
-        history.replaceState({ tab: 'dashboard', _first: true }, '', '?tab=dashboard');
-        setTimeout(() => setTab(initialTab, false, true), 100);
-      } else {
-        history.replaceState({ tab: 'dashboard' }, '', '?tab=dashboard');
+      if (!initialTab || !TAB_ORDER.includes(initialTab)) initialTab = 'dashboard';
+
+      // replaceState দিয়ে প্রথম entry — back চাপলে dashboard-এ ফিরবে
+      history.replaceState({ tab: initialTab }, '', '?tab=' + initialTab);
+      currentTab = initialTab;
+      applyTabUI(initialTab);
+      if (initialTab !== 'dashboard') {
+        // পেছনে dashboard যোগ করি যাতে back চাপলে dashboard-এ যায়
+        setTimeout(() => {
+          history.pushState({ tab: 'dashboard' }, '', '?tab=dashboard');
+          currentTab = initialTab; // still at initial visually
+          applyTabUI(initialTab);
+        }, 50);
       }
 
+      // ✅ একমাত্র popstate listener
       window.addEventListener('popstate', (event) => {
         const state = event.state;
         if (state && state.tab && TAB_ORDER.includes(state.tab)) {
-          isNavigatingBack = true;
-          setTab(state.tab, false);
-          isNavigatingBack = false;
+          currentTab = state.tab;
+          applyTabUI(state.tab);
+        } else {
+          // state নেই — ব্যাক করে বেরোতে দাও
         }
       });
 
-      setupNavSwipe();
+      setupSwipe();
     };
 
-    function setupNavSwipe() {
-      const nav = document.getElementById('main-nav');
-      if (!nav) return;
+    // ✅ Swipe — পুরো page জুড়ে, threshold 60px, horizontal-only
+    function setupSwipe() {
       let startX = 0, startY = 0, tracking = false;
+      const THRESHOLD = 60;
 
-      nav.addEventListener('touchstart', (e) => {
+      document.addEventListener('touchstart', (e) => {
         if (e.touches.length !== 1) return;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         tracking = true;
       }, { passive: true });
 
-      nav.addEventListener('touchend', (e) => {
+      document.addEventListener('touchend', (e) => {
         if (!tracking) return;
         tracking = false;
         if (!e.changedTouches || e.changedTouches.length === 0) return;
@@ -773,36 +786,48 @@
         const dx = endX - startX;
         const dy = endY - startY;
 
-        if (Math.abs(dx) < 40) return;
-        if (Math.abs(dy) > Math.abs(dx) * 0.7) return;
+        // Horizontal চেক
+        if (Math.abs(dx) < THRESHOLD) return;
+        if (Math.abs(dy) > Math.abs(dx) * 0.6) return; // বেশি vertical হলে ignore
+
+        // Modal খোলা থাকলে swipe ignore
+        const openModal = document.querySelector('.modal-backdrop[style*="block"]');
+        if (openModal) return;
 
         const idx = TAB_ORDER.indexOf(currentTab);
-        if (dx < 0) {
-          if (idx < TAB_ORDER.length - 1) switchTab(TAB_ORDER[idx + 1]);
+        if (dx > 0) {
+          // ডানে swipe → আগের tab (dashboard এর দিকে)
+          if (idx > 0) goToTab(TAB_ORDER[idx - 1]);
         } else {
-          if (idx > 0) switchTab(TAB_ORDER[idx - 1]);
+          // বামে swipe → পরের tab (reports এর দিকে)
+          if (idx < TAB_ORDER.length - 1) goToTab(TAB_ORDER[idx + 1]);
         }
       }, { passive: true });
     }
 
-    function switchTab(tabId) {
+    // ✅ Tab-এ যাওয়ার একক ফাংশন — history push + UI
+    function goToTab(tabId) {
       if (tabId === currentTab) return;
       if (TAB_ORDER.indexOf(tabId) === -1) return;
-      if (!isNavigatingBack) {
-        history.pushState({ tab: tabId }, '', '?tab=' + tabId);
-      }
-      setTab(tabId, false);
+      history.pushState({ tab: tabId }, '', '?tab=' + tabId);
+      currentTab = tabId;
+      applyTabUI(tabId);
     }
 
-    function setTab(tabId, replaceHistory, initial) {
-      currentTab = tabId;
+    // বাটন ক্লিকে
+    function switchTab(tabId) {
+      goToTab(tabId);
+    }
+
+    // শুধু UI আপডেট (history ছোঁবে না)
+    function applyTabUI(tabId) {
       document.querySelectorAll('.container > div').forEach(div => div.style.display = 'none');
       const activeDiv = document.getElementById(tabId + '-tab');
       if (activeDiv) activeDiv.style.display = 'block';
       document.querySelectorAll('#main-nav button').forEach(b => {
         b.classList.toggle('active', b.dataset.tab === tabId);
       });
-      window.scrollTo({ top: 0, behavior: initial ? 'auto' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
     function renderAll() {
