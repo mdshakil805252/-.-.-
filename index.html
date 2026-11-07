@@ -63,6 +63,7 @@
     nav {
       display: flex; justify-content: space-around; background: #ffffff;
       border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      touch-action: pan-y; user-select: none; -webkit-user-select: none;
     }
 
     nav button {
@@ -122,7 +123,6 @@
     .btn-gold { background: #d97706; color: white; }
     .btn-sm { padding: 6px 12px; font-size: 12px; width: auto; }
 
-    /* Backup page small buttons */
     .backup-mini-btn {
       padding: 8px 14px; font-size: 12px; border-radius: 6px;
       background: #e2e8f0; color: #475569; border: 1px solid #cbd5e1;
@@ -130,15 +130,9 @@
     }
     .backup-mini-btn:hover { background: #cbd5e1; }
 
-    /* Report option box */
     .report-option {
-      padding: 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
-      background: #ffffff;
+      padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 8px;
+      margin-bottom: 10px; cursor: pointer; transition: all 0.15s; background: #ffffff;
     }
     .report-option:hover { border-color: var(--primary); background: #f0fdf4; }
     .report-option.selected { border-color: var(--primary); background: #f0fdf4; }
@@ -181,6 +175,13 @@
 
     .modal-box.wide { max-width: 640px; }
 
+    .container > div { animation: fadeIn 0.18s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0.6; transform: translateX(6px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
     @media print {
       @page { size: A4 portrait; margin: 10mm; }
       body { background: #ffffff !important; color: #0f172a !important; margin: 0 !important; padding: 0 !important; }
@@ -213,17 +214,19 @@
     </div>
   </div>
 
+  <!-- ✅ ফোন নম্বর সরানো হয়েছে — শুধু প্রোপ্রাইটর ও এলাকা -->
   <header>
     <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
-    <p>প্রোঃ মোঃ জহিরুল ইসলাম | রুহিয়া, ঠাকুরগাঁও | 📞 ০১৭১১-২২৩৩৪৪</p>
+    <p>কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
+    <p>প্রোঃ মোঃ জহিরুল ইসলাম | রুহিয়া, ঠাকুরগাঁও</p>
   </header>
 
-  <nav class="no-print">
-    <button class="active" onclick="switchTab('dashboard')">ড্যাশবোর্ড</button>
-    <button onclick="switchTab('sell')">বিক্রয় (Sell)</button>
-    <button onclick="switchTab('stock')">স্টক (Stock)</button>
-    <button onclick="switchTab('due')">বাকি খাতা</button>
-    <button onclick="switchTab('reports')">রিপোর্ট ও ব্যাকআপ</button>
+  <nav class="no-print" id="main-nav">
+    <button data-tab="dashboard" class="active" onclick="switchTab('dashboard')">ড্যাশবোর্ড</button>
+    <button data-tab="sell" onclick="switchTab('sell')">বিক্রয় (Sell)</button>
+    <button data-tab="stock" onclick="switchTab('stock')">স্টক (Stock)</button>
+    <button data-tab="due" onclick="switchTab('due')">বাকি খাতা</button>
+    <button data-tab="reports" onclick="switchTab('reports')">রিপোর্ট ও ব্যাকআপ</button>
   </nav>
 
   <div class="container">
@@ -283,8 +286,9 @@
           <div class="form-group">
             <label>বিক্রয় ইউনিট নির্বাচন করুন:</label>
             <div class="unit-toggle-group">
-              <button type="button" id="btn-unit-pcs" class="unit-toggle-btn active" onclick="setUnitType('pcs')">পিস (Pcs) বিক্রয়</button>
-              <button type="button" id="btn-unit-ctn" class="unit-toggle-btn" onclick="setUnitType('ctn')">কার্টন (Ctn) বিক্রয়</button>
+              <button type="button" id="btn-unit-pcs" class="unit-toggle-btn active" onclick="setUnitType('pcs')">পিস (Pcs)</button>
+              <button type="button" id="btn-unit-ctn" class="unit-toggle-btn" onclick="setUnitType('ctn')">কার্টন (Ctn)</button>
+              <button type="button" id="btn-unit-kg" class="unit-toggle-btn" onclick="setUnitType('kg')" style="display:none;">কেজি (Kg)</button>
             </div>
             <div id="ctn-info-hint" style="font-size:11px; color:#0369a1; margin-top:2px;"></div>
           </div>
@@ -292,11 +296,11 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             <div class="form-group">
               <label id="lbl-qty">পরিমাণ (পিস):</label>
-              <input type="number" id="sel-qty" value="1" min="1">
+              <input type="number" id="sel-qty" value="1" min="1" step="any">
             </div>
             <div class="form-group">
               <label id="lbl-price">দর / রেট (৳):</label>
-              <input type="number" id="sel-price" placeholder="০">
+              <input type="number" id="sel-price" placeholder="০" step="any">
             </div>
           </div>
 
@@ -347,7 +351,7 @@
         <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:8px; margin-bottom:15px;">
           <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">+ নতুন পণ্য যোগ করুন</h4>
           <div class="form-group">
-            <input type="text" id="np-name" placeholder="পণ্যের নাম (যেমন: তীর তেল ১ লিটার)">
+            <input type="text" id="np-name" placeholder="পণ্যের নাম (যেমন: চিনি / তীর তেল ১ লিটার)">
           </div>
 
           <div class="form-group">
@@ -362,18 +366,18 @@
 
           <div class="form-group" id="np-conversion-wrap" style="display:none;">
             <label id="np-conversion-label">১ কার্টনে কত পিস? *</label>
-            <input type="number" id="np-ctn" placeholder="যেমন: ২৪" oninput="updatePcsRatePreview()">
+            <input type="number" id="np-ctn" placeholder="যেমন: ২৪" oninput="updatePcsRatePreview()" step="any">
             <div id="np-pcs-preview" style="font-size:11px; color:#059669; margin-top:3px;"></div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
             <div class="form-group" style="margin-bottom:0;">
               <label id="np-qty-label">স্টক পরিমাণ (পিস):</label>
-              <input type="number" id="np-qty" placeholder="০" oninput="updatePcsRatePreview()">
+              <input type="number" id="np-qty" placeholder="০" oninput="updatePcsRatePreview()" step="any">
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label id="np-price-label">বিক্রয় দর / ইউনিট (৳):</label>
-              <input type="number" id="np-price" placeholder="০" oninput="updatePcsRatePreview()">
+              <input type="number" id="np-price" placeholder="০" oninput="updatePcsRatePreview()" step="any">
             </div>
           </div>
 
@@ -507,6 +511,7 @@
         <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
           <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
           <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px; color:#1b4d3e; font-weight:600; margin-top:2px;">কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
           <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
           <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
           <hr style="margin: 8px 0; border: 0.5px solid #ccc;">
@@ -558,6 +563,7 @@
         <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
           <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
           <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px; color:#1b4d3e; font-weight:600; margin-top:2px;">কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
           <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
           <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
           <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:4px; border-radius:4px; color:#1e293b;">
@@ -573,7 +579,7 @@
                 <th>পণ্য</th>
                 <th>কার্টন/বস্তা সাইজ</th>
                 <th>হিসাব</th>
-                <th>মোট পিস</th>
+                <th>মোট পিস/কেজি</th>
                 <th>বিক্রয় দর</th>
                 <th>মোট মূল্য</th>
               </tr>
@@ -604,16 +610,13 @@
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- ✅ নতুন: Due Report Builder Modal                           -->
-  <!-- ============================================================ -->
+  <!-- Due Report Builder Modal -->
   <div id="dueReportBuilderModal" class="modal-backdrop">
     <div class="modal-box">
       <h3 style="font-size:16px; color:var(--primary); border-bottom:2px solid #f1f5f9; padding-bottom:6px; margin-bottom:14px;">
         📄 বাকি রিপোর্ট তৈরি করুন
       </h3>
 
-      <!-- Option: All or One -->
       <label>রিপোর্টের ধরন:</label>
       <div id="report-type-all" class="report-option selected" onclick="selectReportType('all')">
         <strong>📚 সব গ্রাহকের বাকি রিপোর্ট</strong>
@@ -624,7 +627,6 @@
         <div class="desc">তার পূর্ণ লেনদেন — পণ্য, জমা, বাকি</div>
       </div>
 
-      <!-- Customer select (only for one) -->
       <div id="report-cust-wrap" style="display:none; margin-top:8px;">
         <div class="form-group">
           <label>গ্রাহক নির্বাচন করুন *</label>
@@ -634,7 +636,6 @@
         </div>
       </div>
 
-      <!-- Date range (both types) -->
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px;">
         <div class="form-group">
           <label>তারিখ থেকে (ঐচ্ছিক)</label>
@@ -656,14 +657,10 @@
     </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- ✅ নতুন: Due Report Preview Modal                           -->
-  <!-- ============================================================ -->
+  <!-- Due Report Preview Modal -->
   <div id="dueReportModal" class="modal-backdrop">
     <div class="modal-box print-area" style="max-width:680px;">
-      <div id="due-report-content" style="background:#ffffff; padding:12px; border-radius:6px;">
-        <!-- content injected -->
-      </div>
+      <div id="due-report-content" style="background:#ffffff; padding:12px; border-radius:6px;"></div>
 
       <div class="no-print" style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px;">
         <button class="btn btn-sm btn-gold" onclick="downloadDueReportPDF()">📥 সরাসরি PDF ডাউনলোড</button>
@@ -680,10 +677,10 @@
       });
     }
 
-    let products = JSON.parse(localStorage.getItem('sm_products')) || [
+    let products = JSON.parse(localStorage.getItem('sm_products_v2')) || [
       { id: '1', name: 'তীর সয়াবিন তেল (১ লিটার)', qty: 85, ctn: 12, price: 185, type: 'pcs' },
       { id: '2', name: 'লাক্স সাবান (১০০ গ্রাম)', qty: 144, ctn: 48, price: 65, type: 'pcs' },
-      { id: '3', name: 'মিনিকেট চাল (৫০ কেজি বস্তা)', qty: 30, ctn: 1, price: 3400, type: 'bosta' }
+      { id: '3', name: 'চিনি', qty: 500, ctn: 50, price: 120, type: 'bosta' }
     ];
 
     let sales = JSON.parse(localStorage.getItem('sm_sales')) || [
@@ -696,10 +693,13 @@
     let selectedUnitType = 'pcs';
     let prodToDeleteId = null;
     let newProdType = 'pcs';
-
-    // Due report state
     let reportType = 'all';
     let lastDueReportHTML = '';
+    let currentSellProduct = null;
+
+    const TAB_ORDER = ['dashboard', 'sell', 'stock', 'due', 'reports'];
+    let currentTab = 'dashboard';
+    let isNavigatingBack = false;
 
     const textToType = "মেসার্স এস.এম. ট্রেডার্স";
     let typeIdx = 0;
@@ -725,28 +725,91 @@
     window.onload = () => {
       typeEffect();
       renderAll();
+
+      const params = new URLSearchParams(window.location.search);
+      let initialTab = params.get('tab');
+      if (!initialTab) {
+        if (params.get('sell')) initialTab = 'sell';
+        else if (params.get('due')) initialTab = 'due';
+      }
+      if (initialTab && TAB_ORDER.includes(initialTab)) {
+        history.replaceState({ tab: 'dashboard', _first: true }, '', '?tab=dashboard');
+        setTimeout(() => setTab(initialTab, false, true), 100);
+      } else {
+        history.replaceState({ tab: 'dashboard' }, '', '?tab=dashboard');
+      }
+
+      window.addEventListener('popstate', (event) => {
+        const state = event.state;
+        if (state && state.tab && TAB_ORDER.includes(state.tab)) {
+          isNavigatingBack = true;
+          setTab(state.tab, false);
+          isNavigatingBack = false;
+        }
+      });
+
+      setupNavSwipe();
     };
+
+    function setupNavSwipe() {
+      const nav = document.getElementById('main-nav');
+      if (!nav) return;
+      let startX = 0, startY = 0, tracking = false;
+
+      nav.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        tracking = true;
+      }, { passive: true });
+
+      nav.addEventListener('touchend', (e) => {
+        if (!tracking) return;
+        tracking = false;
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const dx = endX - startX;
+        const dy = endY - startY;
+
+        if (Math.abs(dx) < 40) return;
+        if (Math.abs(dy) > Math.abs(dx) * 0.7) return;
+
+        const idx = TAB_ORDER.indexOf(currentTab);
+        if (dx < 0) {
+          if (idx < TAB_ORDER.length - 1) switchTab(TAB_ORDER[idx + 1]);
+        } else {
+          if (idx > 0) switchTab(TAB_ORDER[idx - 1]);
+        }
+      }, { passive: true });
+    }
+
+    function switchTab(tabId) {
+      if (tabId === currentTab) return;
+      if (TAB_ORDER.indexOf(tabId) === -1) return;
+      if (!isNavigatingBack) {
+        history.pushState({ tab: tabId }, '', '?tab=' + tabId);
+      }
+      setTab(tabId, false);
+    }
+
+    function setTab(tabId, replaceHistory, initial) {
+      currentTab = tabId;
+      document.querySelectorAll('.container > div').forEach(div => div.style.display = 'none');
+      const activeDiv = document.getElementById(tabId + '-tab');
+      if (activeDiv) activeDiv.style.display = 'block';
+      document.querySelectorAll('#main-nav button').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: initial ? 'auto' : 'smooth' });
+    }
 
     function renderAll() {
       renderStats();
       renderStockTable();
       populateProductSelect();
       renderCustomers();
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.container > div').forEach(div => div.style.display = 'none');
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-
-      const activeDiv = document.getElementById(tabId + '-tab');
-      if (activeDiv) activeDiv.style.display = 'block';
-
-      const buttons = document.querySelectorAll('nav button');
-      if(tabId === 'dashboard') buttons[0].classList.add('active');
-      if(tabId === 'sell') buttons[1].classList.add('active');
-      if(tabId === 'stock') buttons[2].classList.add('active');
-      if(tabId === 'due') buttons[3].classList.add('active');
-      if(tabId === 'reports') buttons[4].classList.add('active');
     }
 
     function renderStats() {
@@ -779,19 +842,38 @@
       selectedUnitType = type;
       const btnPcs = document.getElementById('btn-unit-pcs');
       const btnCtn = document.getElementById('btn-unit-ctn');
+      const btnKg = document.getElementById('btn-unit-kg');
       const lblQty = document.getElementById('lbl-qty');
       const lblPrice = document.getElementById('lbl-price');
 
-      if (type === 'ctn') {
-        btnCtn.classList.add('active');
-        btnPcs.classList.remove('active');
-        lblQty.innerText = 'পরিমাণ (কার্টন সংখ্যা):';
-        lblPrice.innerText = 'কার্টন প্রতি দর (৳):';
+      [btnPcs, btnCtn, btnKg].forEach(b => b && b.classList.remove('active'));
+
+      const isBosta = currentSellProduct && currentSellProduct.type === 'bosta';
+
+      if (isBosta) {
+        if (type === 'ctn') {
+          btnCtn.classList.add('active');
+          btnCtn.innerText = 'বস্তা (Bosta)';
+          lblQty.innerText = 'পরিমাণ (বস্তা সংখ্যা):';
+          lblPrice.innerText = 'বস্তা প্রতি দর (৳):';
+        } else {
+          btnPcs.classList.add('active');
+          btnPcs.innerText = 'কেজি (Kg)';
+          lblQty.innerText = 'পরিমাণ (কেজি):';
+          lblPrice.innerText = 'কেজি প্রতি দর (৳):';
+        }
       } else {
-        btnPcs.classList.add('active');
-        btnCtn.classList.remove('active');
-        lblQty.innerText = 'পরিমাণ (পিস):';
-        lblPrice.innerText = 'পিস প্রতি দর (৳):';
+        btnCtn.innerText = 'কার্টন (Ctn)';
+        btnPcs.innerText = 'পিস (Pcs)';
+        if (type === 'ctn') {
+          btnCtn.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (কার্টন সংখ্যা):';
+          lblPrice.innerText = 'কার্টন প্রতি দর (৳):';
+        } else {
+          btnPcs.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (পিস):';
+          lblPrice.innerText = 'পিস প্রতি দর (৳):';
+        }
       }
       onProductSelectChange();
     }
@@ -801,34 +883,105 @@
       const prod = products.find(p => p.id === pid);
       const hint = document.getElementById('ctn-info-hint');
       const priceInput = document.getElementById('sel-price');
+      const btnPcs = document.getElementById('btn-unit-pcs');
+      const btnCtn = document.getElementById('btn-unit-ctn');
+      const btnKg = document.getElementById('btn-unit-kg');
+
+      currentSellProduct = prod || null;
 
       if (!prod) {
         hint.innerText = '';
         return;
       }
 
-      const ctnPcs = Number(prod.ctn) || 0;
-      const typeLabel = prod.type === 'bosta' ? 'বস্তা' : 'কার্টন';
+      const conv = Number(prod.ctn) || 0;
 
-      if (selectedUnitType === 'ctn') {
-        if (ctnPcs > 0) {
-          const ctnRate = Math.round(prod.price * ctnPcs);
-          priceInput.value = ctnRate;
-          hint.innerText = `💡 ১ ${typeLabel}-এ ${ctnPcs} পিস থাকে। (পিস দর ${prod.price}৳ হিসেবে ${typeLabel} দর ${ctnRate}৳)`;
+      if (prod.type === 'bosta') {
+        btnPcs.style.display = 'inline-flex';
+        btnCtn.style.display = 'inline-flex';
+        btnKg.style.display = 'none';
+        btnPcs.innerText = 'কেজি (Kg)';
+        btnCtn.innerText = 'বস্তা (Bosta)';
+        if (selectedUnitType !== 'ctn') selectedUnitType = 'pcs';
+
+        if (selectedUnitType === 'ctn') {
+          if (conv > 0) {
+            const bostaRate = Math.round(prod.price * conv);
+            priceInput.value = bostaRate;
+            hint.innerText = `💡 ১ বস্তায় ${conv} কেজি। (কেজি দর ${prod.price}৳ হিসেবে বস্তা দর ${bostaRate}৳)`;
+          } else {
+            priceInput.value = prod.price;
+            hint.innerText = `⚠️ এই পণ্যের বস্তা সাইজ সেট নেই।`;
+          }
+          setUnitLabel('ctn', true);
         } else {
           priceInput.value = prod.price;
-          hint.innerText = `⚠️ এই পণ্যটি পিস হিসেবে বিক্রি হয়, কার্টন নেই।`;
+          hint.innerText = conv > 0 ? `(১ বস্তা = ${conv} কেজি) — স্টক: ${prod.qty} কেজি` : `স্টক: ${prod.qty} কেজি`;
+          setUnitLabel('pcs', true);
         }
       } else {
-        priceInput.value = prod.price;
-        hint.innerText = ctnPcs > 0 ? `(১ ${typeLabel} = ${ctnPcs} পিস)` : '(১ পিস = ১ পিস)';
+        btnPcs.style.display = 'inline-flex';
+        btnCtn.style.display = 'inline-flex';
+        btnKg.style.display = 'none';
+        btnPcs.innerText = 'পিস (Pcs)';
+        btnCtn.innerText = 'কার্টন (Ctn)';
+        if (selectedUnitType === 'kg') selectedUnitType = 'pcs';
+
+        if (selectedUnitType === 'ctn') {
+          if (conv > 0) {
+            const ctnRate = Math.round(prod.price * conv);
+            priceInput.value = ctnRate;
+            hint.innerText = `💡 ১ কার্টনে ${conv} পিস। (পিস দর ${prod.price}৳ হিসেবে কার্টন দর ${ctnRate}৳)`;
+          } else {
+            priceInput.value = prod.price;
+            hint.innerText = `⚠️ এই পণ্যটি পিস হিসেবে বিক্রি হয়, কার্টন নেই।`;
+          }
+          setUnitLabel('ctn', false);
+        } else {
+          priceInput.value = prod.price;
+          hint.innerText = conv > 0 ? `(১ কার্টন = ${conv} পিস)` : '(১ পিস = ১ পিস)';
+          setUnitLabel('pcs', false);
+        }
+      }
+    }
+
+    function setUnitLabel(type, isBosta) {
+      const lblQty = document.getElementById('lbl-qty');
+      const lblPrice = document.getElementById('lbl-price');
+      const btnPcs = document.getElementById('btn-unit-pcs');
+      const btnCtn = document.getElementById('btn-unit-ctn');
+      [btnPcs, btnCtn].forEach(b => b && b.classList.remove('active'));
+
+      if (isBosta) {
+        if (type === 'ctn') {
+          btnCtn.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (বস্তা সংখ্যা):';
+          lblPrice.innerText = 'বস্তা প্রতি দর (৳):';
+        } else {
+          btnPcs.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (কেজি):';
+          lblPrice.innerText = 'কেজি প্রতি দর (৳):';
+        }
+      } else {
+        if (type === 'ctn') {
+          btnCtn.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (কার্টন সংখ্যা):';
+          lblPrice.innerText = 'কার্টন প্রতি দর (৳):';
+        } else {
+          btnPcs.classList.add('active');
+          lblQty.innerText = 'পরিমাণ (পিস):';
+          lblPrice.innerText = 'পিস প্রতি দর (৳):';
+        }
       }
     }
 
     function populateProductSelect() {
       const sel = document.getElementById('sel-prod');
       sel.innerHTML = '<option value="">-- পণ্য বাছুন --</option>' + 
-        products.map(p => `<option value="${p.id}">${p.name} (মজুদ: ${p.qty} পিস)</option>`).join('');
+        products.map(p => {
+          const unit = p.type === 'bosta' ? 'কেজি' : 'পিস';
+          return `<option value="${p.id}">${p.name} (মজুদ: ${p.qty} ${unit})</option>`;
+        }).join('');
     }
 
     function addToCart() {
@@ -844,30 +997,58 @@
       const prod = products.find(p => p.id === pid);
       if (!prod) return;
 
-      const ctnSize = Number(prod.ctn) || 0;
-      let totalPieces = qtyVal;
+      const conv = Number(prod.ctn) || 0;
+      let baseQty = qtyVal;
 
-      if (selectedUnitType === 'ctn') {
-        if (ctnSize > 0) {
-          totalPieces = qtyVal * ctnSize;
+      if (prod.type === 'bosta') {
+        if (selectedUnitType === 'ctn') {
+          if (conv <= 0) {
+            alert("এই পণ্যের বস্তা সাইজ সেট নেই!");
+            return;
+          }
+          baseQty = qtyVal * conv;
+        } else {
+          baseQty = qtyVal;
         }
-      }
 
-      if (totalPieces > prod.qty) {
-        alert(`স্টকে পর্যাপ্ত পণ্য নেই! বর্তমান মজুদ: ${prod.qty} পিস।`);
-        return;
-      }
+        if (baseQty > prod.qty) {
+          alert(`স্টকে পর্যাপ্ত পণ্য নেই! বর্তমান মজুদ: ${prod.qty} কেজি।`);
+          return;
+        }
 
-      const lineTotal = qtyVal * price;
-      cart.push({
-        id: prod.id,
-        name: prod.name,
-        qty: qtyVal,
-        unitType: selectedUnitType,
-        totalPcs: totalPieces,
-        price: price,
-        total: lineTotal
-      });
+        cart.push({
+          id: prod.id,
+          name: prod.name,
+          qty: qtyVal,
+          unitType: selectedUnitType === 'ctn' ? 'bosta' : 'kg',
+          baseQty: baseQty,
+          baseUnit: 'kg',
+          price: price,
+          total: qtyVal * price,
+          productType: 'bosta'
+        });
+      } else {
+        let totalPieces = qtyVal;
+        if (selectedUnitType === 'ctn' && conv > 0) {
+          totalPieces = qtyVal * conv;
+        }
+        if (totalPieces > prod.qty) {
+          alert(`স্টকে পর্যাপ্ত পণ্য নেই! বর্তমান মজুদ: ${prod.qty} পিস।`);
+          return;
+        }
+
+        cart.push({
+          id: prod.id,
+          name: prod.name,
+          qty: qtyVal,
+          unitType: selectedUnitType,
+          baseQty: totalPieces,
+          baseUnit: 'pcs',
+          price: price,
+          total: qtyVal * price,
+          productType: prod.type
+        });
+      }
 
       renderCart();
       document.getElementById('sel-qty').value = '1';
@@ -879,7 +1060,16 @@
 
       tbody.innerHTML = cart.map((item, idx) => {
         grandTotal += item.total;
-        const qtyLabel = item.unitType === 'ctn' ? `${item.qty} কার্টন (${item.totalPcs} পিস)` : `${item.qty} পিস`;
+        let qtyLabel = '';
+        if (item.unitType === 'bosta') {
+          qtyLabel = `${item.qty} বস্তা (${item.baseQty} কেজি)`;
+        } else if (item.unitType === 'kg') {
+          qtyLabel = `${item.qty} কেজি`;
+        } else if (item.unitType === 'ctn') {
+          qtyLabel = `${item.qty} কার্টন (${item.baseQty} পিস)`;
+        } else {
+          qtyLabel = `${item.qty} পিস`;
+        }
         return `
           <tr>
             <td>${item.name}</td>
@@ -919,10 +1109,10 @@
       cart.forEach(item => {
         const p = products.find(x => x.id === item.id);
         if (p) {
-          p.qty = Math.max(0, p.qty - item.totalPcs);
+          p.qty = Math.max(0, p.qty - item.baseQty);
         }
       });
-      localStorage.setItem('sm_products', JSON.stringify(products));
+      localStorage.setItem('sm_products_v2', JSON.stringify(products));
 
       const newSale = {
         id: Date.now().toString(),
@@ -973,11 +1163,11 @@
         convInput.value = '';
       } else if (type === 'bosta') {
         btnBosta.classList.add('active');
-        hint.innerText = 'বস্তা হিসেবে স্টক যোগ হবে। ১ বস্তায় কত পিস/কেজি ও বস্তা রেট দিন।';
+        hint.innerText = 'বস্তা হিসেবে স্টক যোগ হবে। ১ বস্তায় কত কেজি ও বস্তা রেট দিন — সিস্টেম অটো কেজি দর বের করবে।';
         qtyLabel.innerText = 'স্টক পরিমাণ (বস্তা):';
         priceLabel.innerText = 'বিক্রয় দর / বস্তা (৳):';
         convWrap.style.display = 'block';
-        convLabel.innerText = '১ বস্তায় কত পিস/কেজি? *';
+        convLabel.innerText = '১ বস্তায় কত কেজি? *';
         convInput.placeholder = 'যেমন: ৫০';
         convInput.value = '';
       } else {
@@ -1005,10 +1195,11 @@
       }
 
       if (convVal > 0 && priceVal > 0) {
-        const pcsRate = (priceVal / convVal).toFixed(2);
-        const totalPcs = qtyVal * convVal;
+        const baseRate = (priceVal / convVal).toFixed(2);
+        const totalBase = qtyVal * convVal;
         const unitName = newProdType === 'ctn' ? 'কার্টন' : 'বস্তা';
-        preview.innerText = `💡 ${qtyVal} ${unitName} × ${convVal} পিস = ${totalPcs} পিস | প্রতি পিস দর: ${pcsRate}৳`;
+        const baseUnit = newProdType === 'ctn' ? 'পিস' : 'কেজি';
+        preview.innerText = `💡 ${qtyVal} ${unitName} × ${convVal} ${baseUnit} = ${totalBase} ${baseUnit} | প্রতি ${baseUnit} দর: ${baseRate}৳`;
       } else {
         preview.innerText = '';
       }
@@ -1026,25 +1217,25 @@
 
       let finalQty = 0;
       let finalPrice = 0;
-      let ctnSize = 0;
+      let convSize = 0;
       let unitNote = '';
 
       if (newProdType === 'ctn') {
         if (convVal <= 0) return alert("১ কার্টনে কত পিস তা লিখুন!");
-        ctnSize = convVal;
+        convSize = convVal;
         finalQty = qtyVal * convVal;
         finalPrice = priceVal / convVal;
         unitNote = ` (${qtyVal} কার্টন × ${convVal} পিস = ${finalQty} পিস, পিস দর ${finalPrice.toFixed(2)}৳)`;
       } else if (newProdType === 'bosta') {
-        if (convVal <= 0) return alert("১ বস্তায় কত পিস/কেজি তা লিখুন!");
-        ctnSize = convVal;
+        if (convVal <= 0) return alert("১ বস্তায় কত কেজি তা লিখুন!");
+        convSize = convVal;
         finalQty = qtyVal * convVal;
         finalPrice = priceVal / convVal;
-        unitNote = ` (${qtyVal} বস্তা × ${convVal} = ${finalQty} পিস, পিস দর ${finalPrice.toFixed(2)}৳)`;
+        unitNote = ` (${qtyVal} বস্তা × ${convVal} কেজি = ${finalQty} কেজি, কেজি দর ${finalPrice.toFixed(2)}৳)`;
       } else {
         finalQty = qtyVal;
         finalPrice = priceVal;
-        ctnSize = 0;
+        convSize = 0;
         unitNote = ` (${qtyVal} পিস, পিস দর ${priceVal}৳)`;
       }
 
@@ -1052,12 +1243,12 @@
         id: Date.now().toString(),
         name,
         qty: finalQty,
-        ctn: ctnSize,
+        ctn: convSize,
         price: parseFloat(finalPrice.toFixed(2)),
         type: newProdType
       });
 
-      localStorage.setItem('sm_products', JSON.stringify(products));
+      localStorage.setItem('sm_products_v2', JSON.stringify(products));
 
       document.getElementById('np-name').value = '';
       document.getElementById('np-qty').value = '';
@@ -1073,18 +1264,27 @@
     function renderStockTable() {
       const tbody = document.querySelector('#stock-table tbody');
       tbody.innerHTML = products.map(p => {
-        const typeLabel = p.type === 'bosta' ? 'বস্তা' : (p.type === 'ctn' ? 'কার্টন' : 'পিস');
+        let typeLabel = 'পিস';
         let unitDisplay = '-';
-        if (p.ctn > 0) {
-          if (p.type === 'bosta') unitDisplay = `${p.ctn} পিস/বস্তা`;
-          else unitDisplay = `${p.ctn} পিস/কার্টন`;
+        let qtyUnit = 'পিস';
+        let rateUnit = '/পিস';
+
+        if (p.type === 'ctn') {
+          typeLabel = 'কার্টন';
+          if (p.ctn > 0) unitDisplay = `${p.ctn} পিস/কার্টন`;
+        } else if (p.type === 'bosta') {
+          typeLabel = 'বস্তা';
+          if (p.ctn > 0) unitDisplay = `${p.ctn} কেজি/বস্তা`;
+          qtyUnit = 'কেজি';
+          rateUnit = '/কেজি';
         }
+
         return `
           <tr>
             <td><strong>${p.name}</strong><br><span style="font-size:10px; color:#64748b;">ধরন: ${typeLabel}</span></td>
             <td>${unitDisplay}</td>
-            <td><span style="color:${p.qty < 10 ? 'var(--danger)' : '#059669'}; font-weight:bold;">${p.qty} পিস</span></td>
-            <td>${p.price} ৳ <span style="font-size:10px; color:#64748b;">/পিস</span></td>
+            <td><span style="color:${p.qty < 10 ? 'var(--danger)' : '#059669'}; font-weight:bold;">${p.qty} ${qtyUnit}</span></td>
+            <td>${p.price} ৳ <span style="font-size:10px; color:#64748b;">${rateUnit}</span></td>
             <td>
               <button class="btn btn-sm btn-danger" onclick="openDeleteModal('${p.id}', '${p.name.replace(/'/g, "\\'")}')">🗑️ মুছুন</button>
             </td>
@@ -1107,7 +1307,7 @@
     function confirmDeleteProduct() {
       if (!prodToDeleteId) return;
       products = products.filter(p => p.id !== prodToDeleteId);
-      localStorage.setItem('sm_products', JSON.stringify(products));
+      localStorage.setItem('sm_products_v2', JSON.stringify(products));
       closeDeleteModal();
       renderAll();
     }
@@ -1249,15 +1449,23 @@
       document.getElementById('m-date').innerText = date;
       const tbody = document.querySelector('#memo-table tbody');
 
-      tbody.innerHTML = items.map((it, i) => `
-        <tr>
-          <td>${i+1}</td>
-          <td>${it.name}</td>
-          <td>${it.unitType === 'ctn' ? it.qty + ' কার্টন' : it.qty + ' পিস'}</td>
-          <td>${it.price}</td>
-          <td>${it.total}</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = items.map((it, i) => {
+        let qtyText = '';
+        if (it.unitType === 'bosta') qtyText = `${it.qty} বস্তা`;
+        else if (it.unitType === 'kg') qtyText = `${it.qty} কেজি`;
+        else if (it.unitType === 'ctn') qtyText = `${it.qty} কার্টন`;
+        else qtyText = `${it.qty} পিস`;
+
+        return `
+          <tr>
+            <td>${i+1}</td>
+            <td>${it.name}</td>
+            <td>${qtyText}</td>
+            <td>${it.price}</td>
+            <td>${it.total}</td>
+          </tr>
+        `;
+      }).join('');
 
       document.getElementById('m-total').innerText = total;
       document.getElementById('m-paid').innerText = paid;
@@ -1297,38 +1505,46 @@
 
     function openStockReportModal() {
       const tbody = document.querySelector('#stock-report-table tbody');
-      let totalPcs = 0;
+      let totalBase = 0;
       let totalValue = 0;
 
       tbody.innerHTML = products.map((p, i) => {
-        const ctnPcs = Number(p.ctn) || 0;
+        const conv = Number(p.ctn) || 0;
         const qty = p.qty || 0;
-        totalPcs += qty;
+        totalBase += qty;
         const val = qty * p.price;
         totalValue += val;
 
         let breakdown = '-';
-        const typeLabel = p.type === 'bosta' ? 'বস্তা' : 'কার্টন';
-        if (ctnPcs > 0) {
-          const ctns = Math.floor(qty / ctnPcs);
-          const rem = qty % ctnPcs;
-          breakdown = `${ctns} ${typeLabel} ${rem > 0 ? '+ ' + rem + ' পিস' : ''}`;
+        let unitLabel = 'পিস';
+        let convUnit = 'পিস';
+        if (p.type === 'ctn') { unitLabel = 'কার্টন'; convUnit = 'পিস'; }
+        else if (p.type === 'bosta') { unitLabel = 'বস্তা'; convUnit = 'কেজি'; }
+        else { unitLabel = 'পিস'; convUnit = 'পিস'; }
+
+        if (conv > 0) {
+          const n = Math.floor(qty / conv);
+          const rem = qty % conv;
+          breakdown = `${n} ${unitLabel} ${rem > 0 ? '+ ' + rem + ' ' + convUnit : ''}`;
         }
+
+        const qtyUnit = p.type === 'bosta' ? 'কেজি' : 'পিস';
+        const rateUnit = p.type === 'bosta' ? '/কেজি' : '/পিস';
 
         return `
           <tr>
             <td>${i+1}</td>
             <td><strong>${p.name}</strong></td>
-            <td>${ctnPcs > 0 ? ctnPcs + ' পিস' : '-'}</td>
+            <td>${conv > 0 ? conv + ' ' + convUnit : '-'}</td>
             <td>${breakdown}</td>
-            <td>${qty} পিস</td>
-            <td>${p.price} ৳</td>
+            <td>${qty} ${qtyUnit}</td>
+            <td>${p.price} ৳ <span style="font-size:9px; color:#64748b;">${rateUnit}</span></td>
             <td><strong>${val} ৳</strong></td>
           </tr>
         `;
       }).join('');
 
-      document.getElementById('sr-total-pcs').innerText = totalPcs + ' পিস';
+      document.getElementById('sr-total-pcs').innerText = totalBase + ' পিস/কেজি';
       document.getElementById('sr-total-val').innerText = totalValue + ' ৳';
       document.getElementById('stockReportModal').style.display = 'block';
     }
@@ -1349,12 +1565,8 @@
         html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-
-      if (window.html2pdf) {
-        html2pdf().set(opt).from(element).save();
-      } else {
-        window.print();
-      }
+      if (window.html2pdf) html2pdf().set(opt).from(element).save();
+      else window.print();
     }
 
     function downloadStockReportPDF() {
@@ -1367,29 +1579,19 @@
         html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-
-      if (window.html2pdf) {
-        html2pdf().set(opt).from(element).save();
-      } else {
-        window.print();
-      }
+      if (window.html2pdf) html2pdf().set(opt).from(element).save();
+      else window.print();
     }
 
-    // ============================================================
-    // ✅ নতুন: Due Report Builder logic
-    // ============================================================
     function openDueReportModal() {
-      // Populate customer dropdown
       const custSel = document.getElementById('report-cust-select');
       const allNames = [...new Set(sales.map(s => s.customer))].sort();
       custSel.innerHTML = '<option value="">-- গ্রাহক বাছুন --</option>' +
         allNames.map(n => `<option value="${n}">${n}</option>`).join('');
 
-      // Reset
       selectReportType('all');
       document.getElementById('report-date-from').value = '';
       document.getElementById('report-date-to').value = '';
-
       document.getElementById('dueReportBuilderModal').style.display = 'block';
     }
 
@@ -1421,7 +1623,6 @@
     }
 
     function buildAllDueReport(dateFrom, dateTo) {
-      // Gather per-customer summary in date range
       const customerMap = {};
       sales.forEach(s => {
         if (dateFrom && s.date < dateFrom) return;
@@ -1437,7 +1638,6 @@
         .sort((a, b) => b.due - a.due);
 
       let grandTotal = 0, grandPaid = 0, grandDue = 0;
-
       const rowsHtml = customers.map((c, i) => {
         grandTotal += c.total;
         grandPaid += c.paid;
@@ -1463,27 +1663,18 @@
         <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
           <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
           <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px; color:#1b4d3e; font-weight:600; margin-top:2px;">কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
           <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
           <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
           <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:4px; border-radius:4px; color:#1e293b;">
             সব গ্রাহকের বাকি রিপোর্ট — ${rangeLabel}
           </div>
         </div>
-
         <table>
           <thead>
-            <tr>
-              <th>নং</th>
-              <th>গ্রাহক</th>
-              <th>লেনদেন সংখ্যা</th>
-              <th>মোট বিল</th>
-              <th>মোট জমা</th>
-              <th>বাকি</th>
-            </tr>
+            <tr><th>নং</th><th>গ্রাহক</th><th>লেনদেন</th><th>মোট বিল</th><th>মোট জমা</th><th>বাকি</th></tr>
           </thead>
-          <tbody>
-            ${rowsHtml || '<tr><td colspan="6" style="text-align:center; color:#64748b;">কোনো লেনদেন পাওয়া যায়নি।</td></tr>'}
-          </tbody>
+          <tbody>${rowsHtml || '<tr><td colspan="6" style="text-align:center; color:#64748b;">কোনো লেনদেন নেই।</td></tr>'}</tbody>
           <tfoot>
             <tr style="font-weight:bold; background:#f8fafc;">
               <td colspan="3" style="text-align:right;">সর্বমোট:</td>
@@ -1493,18 +1684,15 @@
             </tr>
           </tfoot>
         </table>
-
         <div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px;">
           <span>হিসাব প্রস্তুতকারক</span>
           <span>মালিক / প্রোপ্রাইটরের স্বাক্ষর</span>
         </div>
       `;
-
       document.getElementById('due-report-content').innerHTML = lastDueReportHTML;
     }
 
     function buildSingleCustomerReport(custName, dateFrom, dateTo) {
-      // Sort records by date ascending
       let records = sales.filter(s => s.customer === custName);
       records = records.filter(s => {
         if (dateFrom && s.date < dateFrom) return false;
@@ -1513,20 +1701,21 @@
       }).sort((a, b) => a.date.localeCompare(b.date));
 
       let runningTotal = 0, runningPaid = 0;
-
-      // Build detailed rows
       const rows = records.map((r, i) => {
         runningTotal += (r.total || 0);
         runningPaid += (r.paid || 0);
         const runningDue = runningTotal - runningPaid;
         const isOld = r.isOldDue ? '<span style="color:#d97706; font-size:10px;">(পুরাতন)</span> ' : '';
 
-        // Build product detail
         let productDetail = '';
         if (r.items && r.items.length > 0) {
           productDetail = r.items.map(it => {
-            const qtyLabel = it.unitType === 'ctn' ? `${it.qty} কার্টন (${it.totalPcs} পিস)` : `${it.qty} পিস`;
-            return `${it.name} — ${qtyLabel} × ${it.price}৳ = ${it.total}৳`;
+            let qtyText = '';
+            if (it.unitType === 'bosta') qtyText = `${it.qty} বস্তা (${it.baseQty} কেজি)`;
+            else if (it.unitType === 'kg') qtyText = `${it.qty} কেজি`;
+            else if (it.unitType === 'ctn') qtyText = `${it.qty} কার্টন (${it.baseQty} পিস)`;
+            else qtyText = `${it.qty} পিস`;
+            return `${it.name} — ${qtyText} × ${it.price}৳ = ${it.total}৳`;
           }).join('<br>');
         } else {
           productDetail = r.productName || '-';
@@ -1553,27 +1742,18 @@
         <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:8px; margin-bottom:12px;">
           <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
           <h2 style="font-size:22px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
+          <p style="font-size:13px; color:#1b4d3e; font-weight:600; margin-top:2px;">কৃষি পণ্য ও কীটনাশক বিক্রয় প্রতিষ্ঠান</p>
           <p style="font-size:13px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
           <p style="font-size:12px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
           <div style="margin-top:6px; font-weight:bold; font-size:12px; background:#f1f5f9; padding:4px; border-radius:4px; color:#1e293b;">
             গ্রাহক খাতা: <span style="color:#1b4d3e;">${custName}</span> — ${rangeLabel}
           </div>
         </div>
-
         <table>
           <thead>
-            <tr>
-              <th>নং</th>
-              <th>তারিখ</th>
-              <th>বিবরণ</th>
-              <th>মোট</th>
-              <th>জমা</th>
-              <th>বাকি</th>
-            </tr>
+            <tr><th>নং</th><th>তারিখ</th><th>বিবরণ</th><th>মোট</th><th>জমা</th><th>বাকি</th></tr>
           </thead>
-          <tbody>
-            ${rows || '<tr><td colspan="6" style="text-align:center; color:#64748b;">এই তারিখে কোনো লেনদেন নেই।</td></tr>'}
-          </tbody>
+          <tbody>${rows || '<tr><td colspan="6" style="text-align:center; color:#64748b;">এই তারিখে কোনো লেনদেন নেই।</td></tr>'}</tbody>
           <tfoot>
             <tr style="font-weight:bold; background:#f8fafc;">
               <td colspan="3" style="text-align:right;">সর্বমোট:</td>
@@ -1583,13 +1763,11 @@
             </tr>
           </tfoot>
         </table>
-
         <div style="margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px;">
           <span>ক্রেতার স্বাক্ষর</span>
           <span>বিক্রেতার স্বাক্ষর</span>
         </div>
       `;
-
       document.getElementById('due-report-content').innerHTML = lastDueReportHTML;
     }
 
@@ -1603,12 +1781,8 @@
         html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-
-      if (window.html2pdf) {
-        html2pdf().set(opt).from(element).save();
-      } else {
-        window.print();
-      }
+      if (window.html2pdf) html2pdf().set(opt).from(element).save();
+      else window.print();
     }
 
     function closeDueReportPreview() {
