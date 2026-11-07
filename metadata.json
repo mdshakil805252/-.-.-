@@ -1,0 +1,6 @@
+{
+  "name": "মেসার্স এস.এম. ট্রেডার্স",
+  "description": "মেসার্স এস.এম. ট্রেডার্স (প্রোঃ মোঃ জহিরুল ইসলাম) এর আধুনিক ডিজিটাল স্টক, বিক্রয়, বাকি খাতা ও ইন্সটলযোগ্য PWA অ্যাপ।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
