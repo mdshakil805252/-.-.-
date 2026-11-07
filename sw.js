@@ -1,21 +1,18 @@
-// Service Worker for মেসার্স এস.এম. ট্রেডার্স PWA
-const CACHE_NAME = 'sm-traders-v2';
+const CACHE_NAME = 'sm-traders-v1';
+
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/pwa-192x192.png',
-  '/pwa-512x512.png',
-  '/apple-touch-icon.png'
+  './',
+  './index.html',
+  './app.js',
+  './manifest.json',
+  './data.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
+      console.log('সকল ফাইল অফলাইনে ক্যাশ করা সম্পন্ন হয়েছে');
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
   self.skipWaiting();
@@ -27,6 +24,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('পুরোনো ক্যাশ মুছে ফেলা হয়েছে:', key);
             return caches.delete(key);
           }
         })
@@ -39,12 +37,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => {
+      return cachedResponse || fetch(event.request).catch(() => {
         if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
+          return caches.match('./index.html');
         }
       });
     })
