@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মেসার্স এস.এম. ট্রেডার্স</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1b4d3e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+  <style>
+    :root {
+      --primary: #1b4d3e;
+      --primary-dark: #123329;
+      --secondary: #2c7a7b;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 30px;
+    }
+
+    /* Splash Screen (Typewriter Effect) */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: #fffdf5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stamp-box {
+      border: 2px dashed #282566;
+      padding: 25px 30px;
+      border-radius: 8px;
+      color: #282566;
+      max-width: 90%;
+      background: #ffffff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    #typewriter {
+      font-size: 22px;
+      font-weight: bold;
+      border-right: 3px solid #282566;
+      white-space: nowrap;
+      overflow: hidden;
+      margin-bottom: 10px;
+      min-height: 30px;
+    }
+
+    /* Header */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 15px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    header h2 { font-size: 20px; }
+    header p { font-size: 13px; opacity: 0.9; margin-top: 3px; }
+
+    /* Navigation Bar */
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav button {
+      flex: 1;
+      padding: 14px 5px;
+      border: none;
+      background: none;
+      font-weight: 600;
+      font-size: 14px;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    nav button.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background-color: #f0fdf4;
+    }
+
+    /* Container & Cards */
+    .container {
+      max-width: 600px;
+      margin: 15px auto;
+      padding: 0 12px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 17px;
+      margin-bottom: 14px;
+      color: var(--primary);
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    /* Forms */
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      color: #475569;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 11px;
+      margin-top: 5px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn:active { background: var(--primary-dark); }
+    .btn-secondary { background: var(--secondary); }
+    .btn-sm { width: auto; padding: 7px 14px; font-size: 13px; margin: 0; }
+    .btn-danger { background: var(--danger); }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table th, table td { border: 1px solid #e2e8f0; padding: 9px 8px; text-align: left; }
+    table th { background: #f1f5f9; font-weight: 600; color: #334155; }
+
+    /* Customer List */
+    .customer-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .customer-item:hover { background: #f8fafc; }
+
+    /* Cash Memo (Print View) */
+    #memoModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .memo-content {
+      background: #ffffff;
+      max-width: 520px;
+      margin: 20px auto;
+      padding: 25px;
+      border: 1px solid #bbb;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      border-radius: 4px;
+    }
+
+    .memo-header {
+      text-align: center;
+      border-bottom: 2px double #1f2937;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+
+    .memo-header h2 {
+      font-size: 22px;
+      color: #1e1b4b;
+      margin: 4px 0;
+    }
+
+    .memo-header p {
+      font-size: 13px;
+      margin: 2px 0;
+      color: #374151;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #memoModal, #memoModal * { visibility: visible; }
+      #memoModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        padding: 0;
+        margin: 0;
+      }
+      .memo-content {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+        padding: 15px;
+        margin: 0;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Splash Screen -->
+  <div id="splash" onclick="skipSplash()">
+    <div class="stamp-box">
+      <div id="typewriter"></div>
+      <p id="sub1" style="display:none; font-size: 15px; font-weight:600;">প্রোঃ মোঃ জহিরুল ইসলাম</p>
+      <p id="sub2" style="display:none; font-size: 13px; margin-top: 5px;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+      <span style="display:block; margin-top:15px; font-size:11px; color:#6b7280;">(ক্লিক করে দ্রুত হোম পেজে যান)</span>
+    </div>
+  </div>
+
+  <!-- 2. Header -->
+  <header>
+    <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
+    <p>প্রোঃ মোঃ জহিরুল ইসলাম | রুহিয়া, ঠাকুরগাঁও</p>
+  </header>
+
+  <!-- 3. Navigation -->
+  <nav>
+    <button id="tab-btn-stock" class="active" onclick="switchTab('stock')">📦 স্টক</button>
+    <button id="tab-btn-sell" onclick="switchTab('sell')">🛒 বিক্রয়</button>
+    <button id="tab-btn-report" onclick="switchTab('report')">📑 রিপোর্ট / খাতা</button>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Tab 1: Stock Section -->
+    <div id="sec-stock" class="tab-content">
+      <div class="card">
+        <h3>স্টকে নতুন পণ্য যোগ করুন</h3>
+        <label>পণ্যের নাম</label>
+        <input type="text" id="p-name" placeholder="যেমন: সয়াবিন তেল / সাবান">
+        
+        <label>প্রতি কার্টনে পিস (Pcs per Carton)</label>
+        <input type="number" id="p-ctn" placeholder="যেমন: 24">
+        
+        <label>প্রতি পিসের বিক্রয় মূল্য (টাকা)</label>
+        <input type="number" id="p-price" placeholder="যেমন: 120">
+        
+        <button class="btn" onclick="addStock()">স্টকে যোগ করুন</button>
+      </div>
+
+      <div class="card">
+        <h3>বর্তমান স্টক তালিকা</h3>
+        <div class="table-responsive">
+          <table id="stock-table">
+            <thead>
+              <tr>
+                <th>পণ্য</th>
+                <th>পিস/কার্টন</th>
+                <th>দর (পিস)</th>
+                <th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Sell Section -->
+    <div id="sec-sell" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>নতুন পণ্য বিক্রয়</h3>
+        <label>তারিখ</label>
+        <input type="date" id="s-date">
+        
+        <label>ক্রেতার / গ্রাহকের নাম</label>
+        <input type="text" id="s-customer" placeholder="গ্রাহকের পুরো নাম">
+        
+        <label>পণ্য সিলেক্ট করুন</label>
+        <select id="s-product" onchange="calculateSellTotal()">
+          <option value="">পণ্য নির্বাচন করুন</option>
+        </select>
+        
+        <label>পরিমাণ (পিস)</label>
+        <input type="number" id="s-qty" value="1" min="1" oninput="calculateSellTotal()">
+        
+        <div style="margin-top: 15px; padding: 12px; background: #f1f5f9; border-radius: 6px;">
+          <p><strong>মোট মূল্য: <span id="s-total-display">০</span> ৳</strong></p>
+        </div>
+
+        <label>জমা টাকা (Payment)</label>
+        <input type="number" id="s-paid" placeholder="কত টাকা পরিশোধ করেছেন" oninput="calculateSellTotal()">
+
+        <p style="margin-top: 10px; color: var(--danger); font-weight: bold;">
+          বাকি টাকা: <span id="s-due-display">০</span> ৳
+        </p>
+
+        <button class="btn" onclick="saveSale()">বিক্রি সম্পন্ন করুন</button>
+      </div>
+    </div>
+
+    <!-- Tab 3: Report Section -->
+    <div id="sec-report" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>সকল গ্রাহকের তালিকা</h3>
+        <div id="customer-list"></div>
+      </div>
+
+      <!-- Customer Detail View -->
+      <div id="customer-detail-card" class="card" style="display:none;">
+        <h3 id="det-name">গ্রাহকের হিসাব</h3>
+        
+        <!-- Quick Payment Add -->
+        <div style="background: #fdf6b2; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+          <label style="margin-top:0;">বাকি থেকে টাকা জমা দিন:</label>
+          <div style="display: flex; gap: 8px; margin-top: 5px;">
+            <input type="number" id="quick-pay-amt" placeholder="টাকার পরিমাণ">
+            <button class="btn btn-secondary btn-sm" onclick="addPayment()">জমা</button>
+          </div>
+        </div>
+
+        <h4>ক্রয় ও লেনদেনের ইতিহাস:</h4>
+        <div class="table-responsive">
+          <table id="history-table">
+            <thead>
+              <tr>
+                <th>তারিখ</th>
+                <th>বিবরণ</th>
+                <th>মোট</th>
+                <th>জমা</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 15px; text-align: right; font-size: 15px;">
+          <p><strong>বর্তমান মোট বাকি: <span id="det-due" style="color:var(--danger);">০</span> ৳</strong></p>
+        </div>
+
+        <button class="btn" style="margin-top: 15px;" onclick="generateMemo()">📄 মেমো / PDF প্রিন্ট করুন</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Printable Cash Memo Modal -->
+  <div id="memoModal">
+    <div class="memo-content">
+      <div class="memo-header">
+        <p style="font-size: 11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
+        <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
+        <p><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
+        <p>পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+        <hr style="margin: 8px 0; border: 0.5px solid #ccc;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; text-align: left;">
+          <span><strong>গ্রাহক:</strong> <span id="m-cust"></span></span>
+          <span><strong>তারিখ:</strong> <span id="m-date"></span></span>
+        </div>
+      </div>
+
+      <table id="memo-table">
+        <thead>
+          <tr>
+            <th>নং</th>
+            <th>বিবরণ</th>
+            <th>পরিমাণ</th>
+            <th>দর</th>
+            <th>মোট</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top: 15px; font-size: 13px; line-height: 1.8; text-align: right;">
+        <p>মোট টাকা: <strong><span id="m-total">০</span> ৳</strong></p>
+        <p>মোট জমা: <strong><span id="m-paid">০</span> ৳</strong></p>
+        <p style="border-top: 1px solid #333; display: inline-block; padding-left: 20px;">
+          বর্তমান বাকি: <strong><span id="m-due">০</span> ৳</strong>
+        </p>
+      </div>
+
+      <div style="margin-top: 35px; display: flex; justify-content: space-between; font-size: 12px;">
+        <span>ক্রেতার স্বাক্ষর</span>
+        <span>বিক্রেতার স্বাক্ষর</span>
+      </div>
+
+      <div class="no-print" style="margin-top: 20px; display: flex; gap: 10px;">
+        <button class="btn" onclick="window.print()">🖨️ প্রিন্ট / PDF সেভ</button>
+        <button class="btn btn-secondary" onclick="closeMemo()">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+
+    // Data Storage
+    let products = JSON.parse(localStorage.getItem('sm_products')) || [];
+    let sales = JSON.parse(localStorage.getItem('sm_sales')) || [];
+    let activeCustomer = null;
+
+    // Typewriter Splash Screen
+    const titleText = "মেসার্স এস.এম. ট্রেডার্স";
+    let charIdx = 0;
+    function typeEffect() {
+      if (charIdx < titleText.length) {
+        document.getElementById("typewriter").innerHTML += titleText.charAt(charIdx);
+        charIdx++;
+        setTimeout(typeEffect, 80);
+      } else {
+        document.getElementById("sub1").style.display = "block";
+        document.getElementById("sub2").style.display = "block";
+        setTimeout(() => {
+          skipSplash();
+        }, 1200);
+      }
+    }
+
+    function skipSplash() {
+      const splash = document.getElementById("splash");
+      if(splash) splash.style.display = "none";
+    }
+
+    window.onload = function() {
+      typeEffect();
+      document.getElementById('s-date').valueAsDate = new Date();
+      renderStock();
+      populateProductSelect();
+    };
+
+    // Navigation Switcher
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('sec-' + tab).style.display = 'block';
+      document.getElementById('tab-btn-' + tab).classList.add('active');
+
+      if(tab === 'report') renderCustomers();
+    }
+
+    // Stock Functions
+    function addStock() {
+      const name = document.getElementById('p-name').value.trim();
+      const ctn = document.getElementById('p-ctn').value;
+      const price = parseFloat(document.getElementById('p-price').value);
+
+      if (!name || isNaN(price)) return alert("পণ্যের নাম ও সঠিক মূল্য দিন!");
+
+      products.push({ id: Date.now(), name, ctn, price });
+      localStorage.setItem('sm_products', JSON.stringify(products));
+      
+      document.getElementById('p-name').value = '';
+      document.getElementById('p-ctn').value = '';
+      document.getElementById('p-price').value = '';
+
+      renderStock();
+      populateProductSelect();
+      alert("পণ্য স্টকে সফলভাবে যুক্ত হয়েছে!");
+    }
+
+    function renderStock() {
+      const tbody = document.querySelector('#stock-table tbody');
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">কোনো পণ্য যুক্ত করা হয়নি</td></tr>';
+        return;
+      }
+      tbody.innerHTML = products.map((p, idx) => `
+        <tr>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.ctn || '-'} পিস</td>
+          <td>${p.price} ৳</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteStock(${idx})">ডিলিট</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteStock(idx) {
+      if(confirm("পণ্যটি ডিলিট করতে চান?")) {
+        products.splice(idx, 1);
+        localStorage.setItem('sm_products', JSON.stringify(products));
+        renderStock();
+        populateProductSelect();
+      }
+    }
+
+    function populateProductSelect() {
+      const select = document.getElementById('s-product');
+      select.innerHTML = '<option value="">পণ্য নির্বাচন করুন</option>' + 
+        products.map(p => `<option value="${p.id}" data-price="${p.price}">${p.name} (${p.price} ৳)</option>`).join('');
+    }
+
+    // Sales Functions
+    function calculateSellTotal() {
+      const select = document.getElementById('s-product');
+      const opt = select.options[select.selectedIndex];
+      const price = opt ? parseFloat(opt.getAttribute('data-price')) || 0 : 0;
+      const qty = parseFloat(document.getElementById('s-qty').value) || 0;
+      const total = price * qty;
+      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+
+      document.getElementById('s-total-display').innerText = total;
+      document.getElementById('s-due-display').innerText = Math.max(0, total - paid);
+    }
+
+    function saveSale() {
+      const date = document.getElementById('s-date').value;
+      const customer = document.getElementById('s-customer').value.trim();
+      const select = document.getElementById('s-product');
+      const productId = select.value;
+      const qty = parseFloat(document.getElementById('s-qty').value);
+      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
+
+      if (!customer || !productId || !qty) return alert("তারিখ, গ্রাহকের নাম ও পণ্য নির্বাচন করুন!");
+
+      const prod = products.find(p => p.id == productId);
+      const total = prod.price * qty;
+
+      sales.push({
+        id: Date.now(),
+        date,
+        customer,
+        productName: prod.name,
+        price: prod.price,
+        qty,
+        total,
+        paid
+      });
+
+      localStorage.setItem('sm_sales', JSON.stringify(sales));
+
+      alert("বিক্রি সফলভাবে সম্পন্ন হয়েছে!");
+      document.getElementById('s-customer').value = '';
+      document.getElementById('s-paid').value = '';
+      calculateSellTotal();
+    }
+
+    // Report Functions
+    function renderCustomers() {
+      const listDiv = document.getElementById('customer-list');
+      const customerNames = [...new Set(sales.map(s => s.customer))];
+
+      if (customerNames.length === 0) {
+        listDiv.innerHTML = "<p style='color:#64748b;'>এখনো কোনো গ্রাহকের হিসাব পাওয়া যায়নি।</p>";
+        document.getElementById('customer-detail-card').style.display = 'none';
+        return;
+      }
+
+      listDiv.innerHTML = customerNames.map(name => {
+        const custSales = sales.filter(s => s.customer === name);
+        const total = custSales.reduce((a, b) => a + (b.total || 0), 0);
+        const paid = custSales.reduce((a, b) => a + (b.paid || 0), 0);
+        const due = total - paid;
+        return `
+          <div class="customer-item" onclick="viewCustomer('${name}')">
+            <div>
+              <strong>${name}</strong>
+              <div style="font-size:12px; color:#64748b;">মোট ক্রয়: ${total} ৳</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="color:${due > 0 ? 'var(--danger)' : '#16a34a'}; font-weight:bold;">
+                ${due > 0 ? 'বাকি: ' + due : 'পরিশোধ'} ৳
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function viewCustomer(name) {
+      activeCustomer = name;
+      document.getElementById('customer-detail-card').style.display = 'block';
+      document.getElementById('det-name').innerText = name + "-এর খাতা";
+      
+      const records = sales.filter(s => s.customer === name);
+      const tbody = document.querySelector('#history-table tbody');
+      
+      let totalAll = 0, paidAll = 0;
+      tbody.innerHTML = records.map(r => {
+        totalAll += (r.total || 0);
+        paidAll += (r.paid || 0);
+        return `
+          <tr>
+            <td>${r.date}</td>
+            <td>${r.productName || 'নগদ জমা'} ${r.qty > 0 ? '(' + r.qty + ' পিস)' : ''}</td>
+            <td>${r.total || 0}</td>
+            <td>${r.paid || 0}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('det-due').innerText = totalAll - paidAll;
+    }
+
+    function addPayment() {
+      const amt = parseFloat(document.getElementById('quick-pay-amt').value);
+      if (!amt || !activeCustomer) return alert("সঠিক টাকার পরিমাণ লিখুন!");
+
+      sales.push({
+        id: Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        customer: activeCustomer,
+        productName: "নগদ টাকা জমা",
+        qty: 0,
+        total: 0,
+        paid: amt
+      });
+
+      localStorage.setItem('sm_sales', JSON.stringify(sales));
+      document.getElementById('quick-pay-amt').value = '';
+      viewCustomer(activeCustomer);
+      alert("টাকা জমা যুক্ত হয়েছে!");
+    }
+
+    // Cash Memo Generator
+    function generateMemo() {
+      if(!activeCustomer) return;
+      const records = sales.filter(s => s.customer === activeCustomer);
+      
+      document.getElementById('m-cust').innerText = activeCustomer;
+      document.getElementById('m-date').innerText = new Date().toLocaleDateString('bn-BD');
+
+      let total = 0, paid = 0;
+      const tbody = document.querySelector('#memo-table tbody');
+      const itemRecords = records.filter(r => r.qty > 0);
+
+      tbody.innerHTML = itemRecords.map((r, i) => {
+        total += r.total;
+        return `
+          <tr>
+            <td>${i+1}</td>
+            <td>${r.productName}</td>
+            <td>${r.qty} পিস</td>
+            <td>${r.price}</td>
+            <td>${r.total}</td>
+          </tr>
+        `;
+      }).join('');
+
+      paid = records.reduce((a, b) => a + (b.paid || 0), 0);
+
+      document.getElementById('m-total').innerText = total;
+      document.getElementById('m-paid').innerText = paid;
+      document.getElementById('m-due').innerText = total - paid;
+
+      document.getElementById('memoModal').style.display = 'block';
+    }
+
+    function closeMemo() {
+      document.getElementById('memoModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
