@@ -1,8 +1,8 @@
 /* মেসার্স এস.এম. ট্রেডার্স - Service Worker
-   HTML আপডেট করলে ভার্সন নম্বর (v3) বাড়ান → v4, v5 ... */
+   HTML আপডেট করলে ভার্সন নম্বর (v4) বাড়ান → v5, v6 ... */
 
-const CACHE_NAME = 'sm-traders-v3';
-const RUNTIME_CACHE = 'sm-traders-runtime-v3';
+const CACHE_NAME = 'sm-traders-v4';
+const RUNTIME_CACHE = 'sm-traders-runtime-v4';
 
 const CORE_ASSETS = [
   './',
