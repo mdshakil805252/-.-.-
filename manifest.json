@@ -2,19 +2,70 @@
   "name": "মেসার্স এস.এম. ট্রেডার্স",
   "short_name": "এস.এম.ট্রেডার্স",
   "description": "মেসার্স এস.এম. ট্রেডার্স - পণ্য বিক্রয়, স্টক ও বাকি খাতা ব্যবস্থাপনা অ্যাপ",
+  "id": "/",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
   "orientation": "portrait",
   "background_color": "#fffdf5",
   "theme_color": "#1b4d3e",
   "lang": "bn",
   "dir": "ltr",
   "categories": ["business", "productivity", "shopping"],
+  "prefer_related_applications": false,
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "নতুন বিক্রয়",
+      "short_name": "বিক্রয়",
+      "description": "দ্রুত নতুন বিক্রয় করুন",
+      "url": "./index.html?sell=1",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "বাকি খাতা",
+      "short_name": "বাকি",
+      "description": "গ্রাহকের বাকি দেখুন",
+      "url": "./index.html?due=1",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
   ]
 }
