@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>মেসার্স এস.এম. ট্রেডার্স</title>
 
-  <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1b4d3e">
   <meta name="mobile-web-app-capable" content="yes">
@@ -15,7 +14,6 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="icon.svg">
 
-  <!-- Google Bengali Font (Hind Siliguri) & html2pdf CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,187 +31,87 @@
       --gold: #f59e0b;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Hind Siliguri', 'Segoe UI', Tahoma, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', 'Segoe UI', Tahoma, sans-serif; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding-bottom: 30px;
-    }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
 
-    /* Splash Screen */
     #splash {
-      position: fixed;
-      inset: 0;
-      background: #fffdf5;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      text-align: center;
-      padding: 20px;
-      cursor: pointer;
+      position: fixed; inset: 0; background: #fffdf5;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 9999; text-align: center; padding: 20px; cursor: pointer;
     }
 
     .stamp-box {
-      border: 2px dashed #282566;
-      padding: 25px 30px;
-      border-radius: 12px;
-      color: #282566;
-      max-width: 90%;
-      background: #ffffff;
+      border: 2px dashed #282566; padding: 25px 30px; border-radius: 12px;
+      color: #282566; max-width: 90%; background: #ffffff;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     #typewriter {
-      font-size: 24px;
-      font-weight: bold;
-      color: var(--primary);
-      border-right: 3px solid #282566;
-      white-space: nowrap;
-      overflow: hidden;
-      margin-bottom: 10px;
-      min-height: 34px;
+      font-size: 24px; font-weight: bold; color: var(--primary);
+      border-right: 3px solid #282566; white-space: nowrap; overflow: hidden;
+      margin-bottom: 10px; min-height: 34px;
     }
 
-    /* Header */
     header {
-      background: var(--primary);
-      color: white;
-      padding: 14px 15px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--primary); color: white; padding: 14px 15px; text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
     }
     header h2 { font-size: 20px; font-weight: 800; color: #fef08a; }
     header p { font-size: 12px; opacity: 0.95; margin-top: 2px; }
 
-    /* Navigation */
     nav {
-      display: flex;
-      justify-content: space-around;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      display: flex; justify-content: space-around; background: #ffffff;
+      border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     nav button {
-      flex: 1;
-      padding: 12px 5px;
-      border: none;
-      background: none;
-      font-weight: 700;
-      font-size: 13px;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      flex: 1; padding: 12px 5px; border: none; background: none;
+      font-weight: 700; font-size: 13px; color: #64748b; cursor: pointer; transition: all 0.2s ease;
     }
 
     nav button.active {
-      color: var(--primary);
-      border-bottom: 3px solid var(--primary);
-      background-color: #f0fdf4;
+      color: var(--primary); border-bottom: 3px solid var(--primary); background-color: #f0fdf4;
     }
 
-    .container {
-      max-width: 650px;
-      margin: 15px auto;
-      padding: 0 12px;
-    }
+    .container { max-width: 650px; margin: 15px auto; padding: 0 12px; }
 
     .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      background: var(--card-bg); border-radius: 12px; padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 16px;
       border: 1px solid #e2e8f0;
     }
 
     .card h3 {
-      font-size: 16px;
-      margin-bottom: 12px;
-      color: var(--primary);
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 6px;
-      font-weight: 700;
+      font-size: 16px; margin-bottom: 12px; color: var(--primary);
+      border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; font-weight: 700;
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 15px;
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px; }
 
     .stat-box {
-      background: #f8fafc;
-      padding: 14px 10px;
-      border-radius: 10px;
-      text-align: center;
-      border: 1px solid #e2e8f0;
+      background: #f8fafc; padding: 14px 10px; border-radius: 10px;
+      text-align: center; border: 1px solid #e2e8f0;
     }
 
-    .stat-box h4 {
-      font-size: 11px;
-      color: #64748b;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
+    .stat-box h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
+    .stat-box .val { font-size: 18px; font-weight: 800; color: var(--primary); }
 
-    .stat-box .val {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--primary);
-    }
+    .form-group { margin-bottom: 12px; }
 
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: #334155;
-    }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #334155; }
 
     input, select {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 13px;
-      background: #fff;
+      width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1;
+      border-radius: 8px; font-size: 13px; background: #fff;
     }
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(27,77,62,0.15);
-    }
+    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(27,77,62,0.15); }
 
     .btn {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      width: 100%; padding: 10px; border: none; border-radius: 8px;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       transition: background 0.2s;
     }
 
@@ -224,142 +122,78 @@
     .btn-gold { background: #d97706; color: white; }
     .btn-sm { padding: 6px 12px; font-size: 12px; width: auto; }
 
-    /* Unit Toggle Buttons */
-    .unit-toggle-group {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .unit-toggle-btn {
-      flex: 1;
-      padding: 7px 10px;
-      border: 1.5px solid #cbd5e1;
-      background: #f8fafc;
+    /* Backup page small buttons */
+    .backup-mini-btn {
+      padding: 8px 14px;
+      font-size: 12px;
       border-radius: 6px;
-      font-weight: bold;
-      font-size: 12px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s;
-    }
-    .unit-toggle-btn.active {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-    }
-
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 12px;
-    }
-
-    th, td {
-      border: 1px solid #e2e8f0;
-      padding: 8px 6px;
-      text-align: left;
-    }
-
-    th {
-      background: #f1f5f9;
-      font-weight: 700;
-      color: #334155;
-    }
-
-    .customer-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      background: #e2e8f0;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      width: auto;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
     }
+    .backup-mini-btn:hover { background: #cbd5e1; }
+
+    .unit-toggle-group { display: flex; gap: 6px; margin-bottom: 8px; }
+
+    .unit-toggle-btn {
+      flex: 1; padding: 7px 10px; border: 1.5px solid #cbd5e1;
+      background: #f8fafc; border-radius: 6px; font-weight: bold; font-size: 12px;
+      cursor: pointer; text-align: center; transition: all 0.15s;
+    }
+
+    .unit-toggle-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+    .table-responsive { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+
+    th, td { border: 1px solid #e2e8f0; padding: 8px 6px; text-align: left; }
+    th { background: #f1f5f9; font-weight: 700; color: #334155; }
+
+    .customer-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+      margin-bottom: 8px; cursor: pointer; transition: background 0.15s;
+    }
     .customer-item:hover { background: #f8fafc; border-color: #cbd5e1; }
 
-    /* Modal Styling */
     .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 2000;
-      overflow-y: auto;
-      padding: 15px;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 2000; overflow-y: auto; padding: 15px;
     }
 
     .modal-box {
-      background: #ffffff;
-      max-width: 520px;
-      margin: 20px auto;
-      padding: 22px;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      background: #ffffff; max-width: 520px; margin: 20px auto; padding: 22px;
+      border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
 
-    /* Print & PDF Media Styles */
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 10mm;
-      }
-      body {
-        background: #ffffff !important;
-        color: #0f172a !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      header, nav, #splash, .no-print, .container, .btn, #sell-tab, #stock-tab, #due-tab, #reports-tab, #settings-tab {
-        display: none !important;
-      }
+      @page { size: A4 portrait; margin: 10mm; }
+      body { background: #ffffff !important; color: #0f172a !important; margin: 0 !important; padding: 0 !important; }
+      header, nav, #splash, .no-print, .container, .btn { display: none !important; }
       .modal-backdrop {
-        position: static !important;
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        overflow: visible !important;
-        display: block !important;
+        position: static !important; background: transparent !important;
+        padding: 0 !important; margin: 0 !important;
+        overflow: visible !important; display: block !important;
       }
       .modal-box {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-        border-radius: 0 !important;
+        max-width: 100% !important; width: 100% !important;
+        margin: 0 !important; padding: 0 !important;
+        box-shadow: none !important; border: none !important; border-radius: 0 !important;
       }
-      .print-area {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        page-break-inside: auto;
-      }
-      tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
-      }
-      th, td {
-        border: 1px solid #475569 !important;
-        padding: 6px 8px !important;
-      }
+      .print-area { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      table { width: 100% !important; border-collapse: collapse !important; page-break-inside: auto; }
+      tr { page-break-inside: avoid; page-break-after: auto; }
+      th, td { border: 1px solid #475569 !important; padding: 6px 8px !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 1. Splash Screen -->
   <div id="splash" onclick="skipSplash()">
     <div class="stamp-box">
       <div id="typewriter"></div>
@@ -369,13 +203,11 @@
     </div>
   </div>
 
-  <!-- 2. Header -->
   <header>
     <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
     <p>প্রোঃ মোঃ জহিরুল ইসলাম | রুহিয়া, ঠাকুরগাঁও | 📞 ০১৭১১-২২৩৩৪৪</p>
   </header>
 
-  <!-- 3. Navigation -->
   <nav class="no-print">
     <button class="active" onclick="switchTab('dashboard')">ড্যাশবোর্ড</button>
     <button onclick="switchTab('sell')">বিক্রয় (Sell)</button>
@@ -384,10 +216,9 @@
     <button onclick="switchTab('reports')">রিপোর্ট ও ব্যাকআপ</button>
   </nav>
 
-  <!-- 4. Content Containers -->
   <div class="container">
 
-    <!-- TAB 1: Dashboard -->
+    <!-- Dashboard -->
     <div id="dashboard-tab">
       <div class="stats-grid">
         <div class="stat-box">
@@ -419,7 +250,7 @@
       </div>
     </div>
 
-    <!-- TAB 2: Sell (পিস ও কার্টন বিক্রয়) -->
+    <!-- Sell -->
     <div id="sell-tab" style="display:none;">
       <div class="card">
         <h3>🛒 পণ্য বিক্রয় ও মেমো তৈরি</h3>
@@ -452,7 +283,7 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             <div class="form-group">
               <label id="lbl-qty">পরিমাণ (পিস):</label>
-              <input type="number" id="sel-qty" value="1" min="1" oninput="recalcCartInput()">
+              <input type="number" id="sel-qty" value="1" min="1">
             </div>
             <div class="form-group">
               <label id="lbl-price">দর / রেট (৳):</label>
@@ -463,7 +294,6 @@
           <button class="btn btn-primary" onclick="addToCart()">+ তালিকায় যোগ করুন</button>
         </div>
 
-        <!-- Cart Table -->
         <div class="table-responsive">
           <table id="cart-table">
             <thead>
@@ -497,7 +327,7 @@
       </div>
     </div>
 
-    <!-- TAB 3: Stock (মজুদ পণ্য) -->
+    <!-- Stock -->
     <div id="stock-tab" style="display:none;">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -505,14 +335,12 @@
           <button class="btn btn-sm btn-gold" onclick="openStockReportModal()">📄 স্টক রিপোর্ট PDF / প্রিন্ট</button>
         </div>
 
-        <!-- Add Product Form -->
         <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:8px; margin-bottom:15px;">
           <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">+ নতুন পণ্য যোগ করুন</h4>
           <div class="form-group">
             <input type="text" id="np-name" placeholder="পণ্যের নাম (যেমন: তীর তেল ১ লিটার)">
           </div>
 
-          <!-- ✅ নতুন: পণ্যের ধরন নির্বাচন -->
           <div class="form-group">
             <label>পণ্যের ধরন নির্বাচন করুন:</label>
             <div class="unit-toggle-group">
@@ -520,24 +348,24 @@
               <button type="button" id="np-type-ctn" class="unit-toggle-btn" onclick="setProductType('ctn')">কার্টন (Ctn)</button>
               <button type="button" id="np-type-bosta" class="unit-toggle-btn" onclick="setProductType('bosta')">বস্তা (Bosta)</button>
             </div>
-            <div id="np-type-hint" style="font-size:11px; color:#0369a1; margin-top:3px;">পিস হিসেবে স্টক যোগ হবে।</div>
+            <div id="np-type-hint" style="font-size:11px; color:#0369a1; margin-top:3px;">পিস হিসেবে স্টক যোগ হবে। (১ পিস = ১ পিস, কোনো কার্টন নেই)</div>
+          </div>
+
+          <div class="form-group" id="np-conversion-wrap" style="display:none;">
+            <label id="np-conversion-label">১ কার্টনে কত পিস? *</label>
+            <input type="number" id="np-ctn" placeholder="যেমন: ২৪" oninput="updatePcsRatePreview()">
+            <div id="np-pcs-preview" style="font-size:11px; color:#059669; margin-top:3px;"></div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
             <div class="form-group" style="margin-bottom:0;">
               <label id="np-qty-label">স্টক পরিমাণ (পিস):</label>
-              <input type="number" id="np-qty" placeholder="০">
+              <input type="number" id="np-qty" placeholder="০" oninput="updatePcsRatePreview()">
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label id="np-price-label">বিক্রয় দর / ইউনিট (৳):</label>
-              <input type="number" id="np-price" placeholder="০">
+              <input type="number" id="np-price" placeholder="০" oninput="updatePcsRatePreview()">
             </div>
-          </div>
-
-          <!-- কার্টনের জন্য পিস/কার্টন ও বস্তার জন্য পিস/বস্তা -->
-          <div class="form-group" id="np-conversion-wrap" style="display:none; margin-top:8px;">
-            <label id="np-conversion-label">প্রতি কার্টনে পিস:</label>
-            <input type="number" id="np-ctn" placeholder="যেমন: ১২">
           </div>
 
           <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="addProduct()">পণ্য সংরক্ষণ করুন</button>
@@ -560,7 +388,7 @@
       </div>
     </div>
 
-    <!-- TAB 4: Due (বাকি খাতা) -->
+    <!-- Due -->
     <div id="due-tab" style="display:none;">
       <div class="card">
         <h3>📒 কাস্টমার বাকি খাতা</h3>
@@ -570,7 +398,6 @@
         <div id="customer-list"></div>
       </div>
 
-      <!-- ✅ নতুন: পূর্বের বাকি এন্ট্রি কার্ড -->
       <div class="card">
         <h3>➕ পূর্বের বাকি এন্ট্রি করুন</h3>
         <p style="font-size:12px; color:#64748b; margin-bottom:10px;">
@@ -598,7 +425,6 @@
         <button class="btn btn-primary" style="background:#d97706;" onclick="addOldDue()">➕ বাকি এন্ট্রি সংরক্ষণ করুন</button>
       </div>
 
-      <!-- Customer Detail Ledger -->
       <div class="card" id="customer-detail-card" style="display:none;">
         <h3 id="det-name">গ্রাহকের খাতা</h3>
         <p style="font-size: 14px; margin-bottom: 8px;">মোট বর্তমান বাকি: <strong style="color:var(--danger);"><span id="det-due">০</span> ৳</strong></p>
@@ -630,7 +456,7 @@
       </div>
     </div>
 
-    <!-- TAB 5: Reports & Backup -->
+    <!-- Reports -->
     <div id="reports-tab" style="display:none;">
       <div class="card">
         <h3>📊 রিপোর্ট ও ডাটা সংরক্ষণ (Backup)</h3>
@@ -643,11 +469,16 @@
           <button class="btn btn-gold" onclick="openStockReportModal()">📄 বর্তমান স্টক ইনভেন্টরি রিপোর্ট PDF</button>
         </div>
       </div>
+
+      <!-- ✅ ছোট ব্যাকআপ বাটন — পেজের একদম নিচে, চোখে কম পড়ে -->
+      <div style="text-align:center; margin-top:30px; margin-bottom:20px;">
+        <button class="backup-mini-btn" onclick="exportJSONBackup()">💾 ডাটা সংরক্ষণ (Backup)</button>
+      </div>
     </div>
 
   </div>
 
-  <!-- Delete Product Confirmation Modal (হ্যাঁ / না) -->
+  <!-- Delete Confirm Modal -->
   <div id="deleteConfirmModal" class="modal-backdrop">
     <div class="modal-box" style="max-width: 380px; text-align: center;">
       <div style="font-size: 36px; margin-bottom: 8px;">⚠️</div>
@@ -767,14 +598,12 @@
   </div>
 
   <script>
-    // Service Worker Registration for PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       });
     }
 
-    // Data Storage
     let products = JSON.parse(localStorage.getItem('sm_products')) || [
       { id: '1', name: 'তীর সয়াবিন তেল (১ লিটার)', qty: 85, ctn: 12, price: 185, type: 'pcs' },
       { id: '2', name: 'লাক্স সাবান (১০০ গ্রাম)', qty: 144, ctn: 48, price: 65, type: 'pcs' },
@@ -792,7 +621,6 @@
     let prodToDeleteId = null;
     let newProdType = 'pcs';
 
-    // Splash animation
     const textToType = "মেসার্স এস.এম. ট্রেডার্স";
     let typeIdx = 0;
     function typeEffect() {
@@ -841,7 +669,6 @@
       if(tabId === 'reports') buttons[4].classList.add('active');
     }
 
-    // Stats
     function renderStats() {
       const totalProds = products.length;
       const totalStockVal = products.reduce((acc, p) => acc + (p.qty * p.price), 0);
@@ -851,7 +678,6 @@
         .filter(s => s.date === today)
         .reduce((acc, s) => acc + (s.total || 0), 0);
 
-      // Total Due
       const customerMap = {};
       sales.forEach(s => {
         if (!customerMap[s.customer]) customerMap[s.customer] = { total: 0, paid: 0 };
@@ -869,7 +695,6 @@
       document.getElementById('stat-total-due').innerText = totalDue + " ৳";
     }
 
-    // Unit toggle (Pcs vs Ctn)
     function setUnitType(type) {
       selectedUnitType = type;
       const btnPcs = document.getElementById('btn-unit-pcs');
@@ -912,16 +737,12 @@
           hint.innerText = `💡 ১ ${typeLabel}-এ ${ctnPcs} পিস থাকে। (পিস দর ${prod.price}৳ হিসেবে ${typeLabel} দর ${ctnRate}৳)`;
         } else {
           priceInput.value = prod.price;
-          hint.innerText = `⚠️ এই পণ্যের ${typeLabel} সাইজ সেট করা নেই।`;
+          hint.innerText = `⚠️ এই পণ্যটি পিস হিসেবে বিক্রি হয়, কার্টন নেই।`;
         }
       } else {
         priceInput.value = prod.price;
-        hint.innerText = ctnPcs > 0 ? `(১ ${typeLabel} = ${ctnPcs} পিস)` : '';
+        hint.innerText = ctnPcs > 0 ? `(১ ${typeLabel} = ${ctnPcs} পিস)` : '(১ পিস = ১ পিস)';
       }
-    }
-
-    function recalcCartInput() {
-      // triggered on quantity typing
     }
 
     function populateProductSelect() {
@@ -930,7 +751,6 @@
         products.map(p => `<option value="${p.id}">${p.name} (মজুদ: ${p.qty} পিস)</option>`).join('');
     }
 
-    // Cart Management
     function addToCart() {
       const pid = document.getElementById('sel-prod').value;
       const qtyVal = parseFloat(document.getElementById('sel-qty').value);
@@ -1016,7 +836,6 @@
       if (!cust) return alert("গ্রাহকের নাম আবশ্যক!");
       if (cart.length === 0) return alert("তালিকায় কোনো পণ্য নেই!");
 
-      // Deduct stock for all items
       cart.forEach(item => {
         const p = products.find(x => x.id === item.id);
         if (p) {
@@ -1025,7 +844,6 @@
       });
       localStorage.setItem('sm_products', JSON.stringify(products));
 
-      // Save sale record
       const newSale = {
         id: Date.now().toString(),
         date: new Date().toISOString().split('T')[0],
@@ -1040,10 +858,8 @@
       sales.unshift(newSale);
       localStorage.setItem('sm_sales', JSON.stringify(sales));
 
-      // Generate cash memo modal
       generateMemoFromCart(cust, newSale.date, cart, total, paid);
 
-      // Reset form
       cart = [];
       renderCart();
       document.getElementById('cust-name').value = '';
@@ -1052,7 +868,6 @@
       renderAll();
     }
 
-    // ✅ নতুন: পণ্যের ধরন টগল
     function setProductType(type) {
       newProdType = type;
       const btnPcs = document.getElementById('np-type-pcs');
@@ -1069,33 +884,56 @@
 
       if (type === 'ctn') {
         btnCtn.classList.add('active');
-        hint.innerText = 'কার্টন হিসেবে স্টক যোগ হবে। প্রতি কার্টনে কত পিস তা দিন — সিস্টেম নিজে পিস হিসাব রাখবে।';
+        hint.innerText = 'কার্টন হিসেবে স্টক যোগ হবে। ১ কার্টনে কত পিস ও কার্টন রেট দিন — সিস্টেম অটো পিস দর বের করবে।';
         qtyLabel.innerText = 'স্টক পরিমাণ (কার্টন):';
         priceLabel.innerText = 'বিক্রয় দর / কার্টন (৳):';
         convWrap.style.display = 'block';
-        convLabel.innerText = 'প্রতি কার্টনে পিস:';
-        convInput.placeholder = 'যেমন: ১২';
+        convLabel.innerText = '১ কার্টনে কত পিস? *';
+        convInput.placeholder = 'যেমন: ২৪';
         convInput.value = '';
       } else if (type === 'bosta') {
         btnBosta.classList.add('active');
-        hint.innerText = 'বস্তা হিসেবে স্টক যোগ হবে। প্রতি বস্তায় কত পিস/কেজি তা দিন — সিস্টেম নিজে হিসাব রাখবে।';
+        hint.innerText = 'বস্তা হিসেবে স্টক যোগ হবে। ১ বস্তায় কত পিস/কেজি ও বস্তা রেট দিন।';
         qtyLabel.innerText = 'স্টক পরিমাণ (বস্তা):';
         priceLabel.innerText = 'বিক্রয় দর / বস্তা (৳):';
         convWrap.style.display = 'block';
-        convLabel.innerText = 'প্রতি বস্তায় পিস/কেজি:';
+        convLabel.innerText = '১ বস্তায় কত পিস/কেজি? *';
         convInput.placeholder = 'যেমন: ৫০';
         convInput.value = '';
       } else {
         btnPcs.classList.add('active');
-        hint.innerText = 'পিস হিসেবে স্টক যোগ হবে।';
+        hint.innerText = 'পিস হিসেবে স্টক যোগ হবে। (১ পিস = ১ পিস, কোনো কার্টন নেই)';
         qtyLabel.innerText = 'স্টক পরিমাণ (পিস):';
         priceLabel.innerText = 'বিক্রয় দর / পিস (৳):';
         convWrap.style.display = 'none';
         convInput.value = '';
+        document.getElementById('np-pcs-preview').innerText = '';
       }
     }
 
-    // Stock Tab Operations
+    function updatePcsRatePreview() {
+      const preview = document.getElementById('np-pcs-preview');
+      if (!preview) return;
+
+      const qtyVal = parseFloat(document.getElementById('np-qty').value) || 0;
+      const priceVal = parseFloat(document.getElementById('np-price').value) || 0;
+      const convVal = parseFloat(document.getElementById('np-ctn').value) || 0;
+
+      if (newProdType === 'pcs') {
+        preview.innerText = '';
+        return;
+      }
+
+      if (convVal > 0 && priceVal > 0) {
+        const pcsRate = (priceVal / convVal).toFixed(2);
+        const totalPcs = qtyVal * convVal;
+        const unitName = newProdType === 'ctn' ? 'কার্টন' : 'বস্তা';
+        preview.innerText = `💡 ${qtyVal} ${unitName} × ${convVal} পিস = ${totalPcs} পিস | প্রতি পিস দর: ${pcsRate}৳`;
+      } else {
+        preview.innerText = '';
+      }
+    }
+
     function addProduct() {
       const name = document.getElementById('np-name').value.trim();
       const qtyVal = parseFloat(document.getElementById('np-qty').value) || 0;
@@ -1112,21 +950,22 @@
       let unitNote = '';
 
       if (newProdType === 'ctn') {
-        if (convVal <= 0) return alert("প্রতি কার্টনে কত পিস তা লিখুন!");
+        if (convVal <= 0) return alert("১ কার্টনে কত পিস তা লিখুন!");
         ctnSize = convVal;
         finalQty = qtyVal * convVal;
         finalPrice = priceVal / convVal;
-        unitNote = ` (${qtyVal} কার্টন × ${convVal} পিস = ${finalQty} পিস)`;
+        unitNote = ` (${qtyVal} কার্টন × ${convVal} পিস = ${finalQty} পিস, পিস দর ${finalPrice.toFixed(2)}৳)`;
       } else if (newProdType === 'bosta') {
-        if (convVal <= 0) return alert("প্রতি বস্তায় কত পিস/কেজি তা লিখুন!");
+        if (convVal <= 0) return alert("১ বস্তায় কত পিস/কেজি তা লিখুন!");
         ctnSize = convVal;
         finalQty = qtyVal * convVal;
         finalPrice = priceVal / convVal;
-        unitNote = ` (${qtyVal} বস্তা × ${convVal} = ${finalQty} পিস)`;
+        unitNote = ` (${qtyVal} বস্তা × ${convVal} = ${finalQty} পিস, পিস দর ${finalPrice.toFixed(2)}৳)`;
       } else {
         finalQty = qtyVal;
         finalPrice = priceVal;
         ctnSize = 0;
+        unitNote = ` (${qtyVal} পিস, পিস দর ${priceVal}৳)`;
       }
 
       products.unshift({
@@ -1140,11 +979,11 @@
 
       localStorage.setItem('sm_products', JSON.stringify(products));
 
-      // Reset form
       document.getElementById('np-name').value = '';
       document.getElementById('np-qty').value = '';
       document.getElementById('np-ctn').value = '';
       document.getElementById('np-price').value = '';
+      document.getElementById('np-pcs-preview').innerText = '';
       setProductType('pcs');
 
       renderAll();
@@ -1158,7 +997,7 @@
         let unitDisplay = '-';
         if (p.ctn > 0) {
           if (p.type === 'bosta') unitDisplay = `${p.ctn} পিস/বস্তা`;
-          else unitDisplay = `${p.ctn} পিস`;
+          else unitDisplay = `${p.ctn} পিস/কার্টন`;
         }
         return `
           <tr>
@@ -1174,7 +1013,6 @@
       }).join('');
     }
 
-    // Delete Modal Confirmation (হ্যাঁ / না)
     function openDeleteModal(id, name) {
       prodToDeleteId = id;
       document.getElementById('del-prod-name').innerText = `"${name}"`;
@@ -1194,9 +1032,7 @@
       renderAll();
     }
 
-    // Due / Ledger Tab
     function renderCustomers() {
-      // ✅ নতুন: datalist পপুলেট
       const dl = document.getElementById('existing-cust-names');
       const allNames = [...new Set(sales.map(s => s.customer))];
       if (dl) dl.innerHTML = allNames.map(n => `<option value="${n}">`).join('');
@@ -1283,7 +1119,6 @@
       alert("টাকা জমা সফল হয়েছে!");
     }
 
-    // ✅ নতুন: পূর্বের বাকি এন্ট্রি সংরক্ষণ
     function addOldDue() {
       const name = document.getElementById('old-due-name').value.trim();
       const amt = parseFloat(document.getElementById('old-due-amt').value);
@@ -1308,7 +1143,6 @@
 
       localStorage.setItem('sm_sales', JSON.stringify(sales));
 
-      // ফর্ম রিসেট
       document.getElementById('old-due-name').value = '';
       document.getElementById('old-due-amt').value = '';
       document.getElementById('old-due-date').value = '';
@@ -1330,7 +1164,6 @@
       alert("বাকি তাগাদা SMS কপি হয়েছে!");
     }
 
-    // Cash Memo Generator
     function generateMemoFromCart(cust, date, items, total, paid) {
       document.getElementById('m-cust').innerText = cust;
       document.getElementById('m-date').innerText = date;
@@ -1382,7 +1215,6 @@
       document.getElementById('memoModal').style.display = 'none';
     }
 
-    // Stock Report Modal
     function openStockReportModal() {
       const tbody = document.querySelector('#stock-report-table tbody');
       let totalPcs = 0;
@@ -1425,7 +1257,6 @@
       document.getElementById('stockReportModal').style.display = 'none';
     }
 
-    // PDF Generation Functions (A4 High-Resolution)
     function downloadMemoPDF() {
       const element = document.getElementById('memo-content');
       const cust = (document.getElementById('m-cust').innerText || 'customer').trim();
@@ -1435,14 +1266,7 @@
         margin: [10, 10, 10, 10],
         filename: `Cash_Memo_${safeCust}_${dateStr}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2.5,
-          useCORS: true,
-          letterRendering: true,
-          backgroundColor: '#ffffff',
-          scrollX: 0,
-          scrollY: 0
-        },
+        html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -1460,14 +1284,7 @@
         margin: [10, 10, 10, 10],
         filename: `SM_Traders_Stock_Report_${dateStr}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2.5,
-          useCORS: true,
-          letterRendering: true,
-          backgroundColor: '#ffffff',
-          scrollX: 0,
-          scrollY: 0
-        },
+        html2canvas: { scale: 2.5, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -1478,7 +1295,6 @@
       }
     }
 
-    // Backup & Export
     function exportJSONBackup() {
       const data = { products, sales };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
