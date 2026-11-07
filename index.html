@@ -2,472 +2,451 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>মেসার্স এস.এম. ট্রেডার্স</title>
-
-  <!-- PWA & Mobile Tags -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1b4d3e">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="এস.এম.ট্রেডার্স">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মেসার্স এস. এম. ট্রেডার্স - অফলাইন অ্যাপ</title>
+  
+  <!-- PWA Manifest লিংক -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#15803d">
+  
   <style>
     :root {
-      --primary: #1b4d3e;
-      --primary-dark: #123329;
-      --secondary: #2c7a7b;
-      --danger: #dc2626;
+      --primary: #15803d;
+      --primary-hover: #166534;
+      --secondary: #1e3a8a;
+      --danger: #b91c1c;
       --bg: #f8fafc;
       --card-bg: #ffffff;
-      --text: #1f2937;
-      --gold: #f59e0b;
+      --text: #1e293b;
+      --border: #cbd5e1;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
-    
-    #splash {
-      position: fixed; inset: 0; background: #fffdf5; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; z-index: 9999; text-align: center; padding: 20px; cursor: pointer;
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
     }
-    .stamp-box { border: 2px dashed #282566; padding: 25px 30px; border-radius: 12px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
-    #typewriter { font-size: 24px; font-weight: bold; color: var(--primary); border-right: 3px solid #282566; white-space: nowrap; overflow: hidden; min-height: 32px; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 22px; font-weight: bold; }
+    .badge-offline {
+      background: #ffffff;
+      color: var(--primary);
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    .nav-tabs {
+      background: #fff;
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    header { background: var(--primary); color: white; padding: 14px 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
-    header h2 { font-size: 20px; color: #fef08a; }
-    header p { font-size: 12px; opacity: 0.95; }
+    /* ড্যাশবোর্ড কার্ড */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h3 { font-size: 14px; color: #64748b; margin-bottom: 8px; }
+    .card .value { font-size: 26px; font-weight: bold; color: var(--text); }
 
-    #install-banner { background: linear-gradient(to right, #1b4d3e, #134e4a); color: white; padding: 10px 14px; border-radius: 8px; margin: 10px auto; max-width: 600px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    nav { display: flex; justify-content: space-around; background: #ffffff; border-bottom: 1px solid #e2e8f0; }
-    nav button { flex: 1; padding: 12px 5px; border: none; background: none; font-weight: 700; font-size: 13px; color: #64748b; cursor: pointer; }
-    nav button.active { color: var(--primary); border-bottom: 3px solid var(--primary); background-color: #f0fdf4; }
-
-    .container { max-width: 620px; margin: 15px auto; padding: 0 12px; }
-    .card { background: var(--card-bg); border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 16px; border: 1px solid #e2e8f0; }
-    .card h3 { font-size: 16px; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; font-weight: bold; }
-    
-    label { display: block; font-size: 13px; font-weight: 600; margin-top: 10px; color: #475569; }
-    input, select { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
-    .btn { width: 100%; padding: 11px; margin-top: 12px; border: none; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-    .btn-secondary { background: var(--secondary); }
-    .btn-gold { background: var(--gold); color: #0f172a; }
+    /* ইনপুট ফর্ম */
+    .form-group { margin-bottom: 14px; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--primary); }
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .btn:hover { background: var(--primary-hover); }
     .btn-danger { background: var(--danger); }
-    .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; margin: 0; }
+    .btn-secondary { background: #475569; }
 
-    .table-responsive { overflow-x: auto; margin-top: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    table th, table td { border: 1px solid #e2e8f0; padding: 8px 6px; text-align: left; }
-    table th { background: #f8fafc; font-weight: 600; }
+    /* টেবিল */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    th { background: #f1f5f9; color: #334155; font-weight: 600; }
+    tr:hover { background: #f8fafc; }
 
-    .customer-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
-    .customer-item:hover { background: #f8fafc; }
+    /* মেমো স্টাইল */
+    .memo-box {
+      border: 2px solid #334155;
+      padding: 24px;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .memo-header {
+      text-align: center;
+      border-bottom: 2px dashed #94a3b8;
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+    }
+    .memo-header h2 { font-size: 24px; color: #0f172a; margin-bottom: 4px; }
+    .memo-address { font-size: 14px; color: #475569; margin-bottom: 4px; }
+    .memo-tagline {
+      font-size: 14px;
+      font-weight: bold;
+      color: #166534;
+      background: #dcfce7;
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
 
-    #memoModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; overflow-y: auto; padding: 15px; }
-    .memo-content { background: #ffffff; max-width: 500px; margin: 15px auto; padding: 22px; border-radius: 8px; }
+    /* প্রিন্ট ও পিডিএফ সেটিংস */
     @media print {
       body * { visibility: hidden; }
-      #memoModal, #memoModal * { visibility: visible; }
-      #memoModal { position: absolute; left: 0; top: 0; width: 100%; background: white; margin: 0; padding: 0; }
-      .memo-content { box-shadow: none; border: none; max-width: 100%; padding: 10px; }
+      #memo-print-area, #memo-print-area * { visibility: visible; }
+      #memo-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        padding: 0;
+      }
       .no-print { display: none !important; }
+      .memo-tagline {
+        background: transparent !important;
+        border: 1px solid #166534;
+        color: #166534 !important;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Splash Screen -->
-  <div id="splash" onclick="skipSplash()">
-    <div class="stamp-box">
-      <div id="typewriter"></div>
-      <p id="sub1" style="display:none; font-size: 15px; font-weight:700;">প্রোঃ মোঃ জহিরুল ইসলাম</p>
-      <p id="sub2" style="display:none; font-size: 13px; margin-top: 4px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
-      <span style="display:block; margin-top:14px; font-size:11px; color:#6b7280;">(ক্লিক করে সরাসরি অ্যাপে যান ➔)</span>
-    </div>
-  </div>
-
   <header>
-    <h2>মেসার্স এস.এম. ট্রেডার্স</h2>
-    <p>প্রোঃ মোঃ জহিরুল ইসলাম | পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও</p>
+    <div>
+      <h1>মেসার্স এস. এম. ট্রেডার্স</h1>
+      <small style="opacity: 0.9;">সকল প্রকার কৃষি বীজ ও কীটনাশক বিক্রয় কেন্দ্র</small>
+    </div>
+    <span class="badge-offline">● সম্পূর্ণ অফলাইন সফটওয়্যার</span>
   </header>
 
-  <nav>
-    <button id="tab-btn-dash" class="active" onclick="switchTab('dash')">📊 ড্যাশবোর্ড</button>
-    <button id="tab-btn-stock" onclick="switchTab('stock')">📦 স্টক</button>
-    <button id="tab-btn-sell" onclick="switchTab('sell')">🛒 বিক্রয়</button>
-    <button id="tab-btn-report" onclick="switchTab('report')">📑 বাকি খাতা</button>
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('pos', event)">নতুন মেমো / বিক্রয়</button>
+    <button class="tab-btn" onclick="switchTab('dashboard', event)">ড্যাশবোর্ড</button>
+    <button class="tab-btn" onclick="switchTab('products', event)">বীজ ও কীটনাশক স্টক</button>
+    <button class="tab-btn" onclick="switchTab('due', event)">বাকি খাতা</button>
+    <button class="tab-btn" onclick="switchTab('history', event)">বিক্রয় রিপোর্ট</button>
+    <button class="tab-btn" onclick="switchTab('settings', event)">দোকান ও ব্যাকআপ সেটিংস</button>
   </nav>
 
   <div class="container">
-    <div id="install-banner">
-      <div>
-        <strong>📲 ফোনে অ্যাপটি ইন্সটল করুন</strong>
-        <p style="font-size:11px; opacity:0.9;">ইন্টারনেট ছাড়া অফলাইনেও চলবে</p>
-      </div>
-      <button class="btn btn-gold btn-sm" onclick="promptInstall()">ইন্সটল করুন</button>
-    </div>
-
-    <!-- Dashboard -->
-    <div id="sec-dash" class="tab-content">
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
-          <span style="font-size:12px; color:#64748b;">আজকের বিক্রি</span>
-          <strong id="d-today-sale" style="display:block; font-size:18px; color:var(--primary);">০ ৳</strong>
+    
+    <!-- ১. নতুন বিক্রয় ও ক্যাশ মেমো -->
+    <div id="pos" class="tab-content active">
+      <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px;">
+        <div class="card">
+          <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary);">বিক্রয় এন্ট্রি করুন</h3>
+          <div class="form-group">
+            <label>ক্রেতার নাম</label>
+            <input type="text" id="pos-cust-name" placeholder="যেমন: মো: রফিকুল ইসলাম">
+          </div>
+          <div class="form-group">
+            <label>মোবাইল নম্বর</label>
+            <input type="text" id="pos-cust-phone" placeholder="০১XXXXXXXXX">
+          </div>
+          <div class="form-group">
+            <label>বীজ / কীটনাশক নির্বাচন করুন</label>
+            <select id="pos-product-select" onchange="updatePosPrice()"></select>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label>দর / মূল্য (প্রতি একক)</label>
+              <input type="number" id="pos-price">
+            </div>
+            <div class="form-group">
+              <label>পরিমাণ (কেজি / প্যাকেট / বোতল)</label>
+              <input type="number" id="pos-qty" value="1" min="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>নগদ জমা (টাকা)</label>
+            <input type="number" id="pos-paid" value="0">
+          </div>
+          <button class="btn" style="width: 100%; padding: 12px;" onclick="completeSale()">
+            ✓ বিক্রয় সম্পন্ন করুন ও মেমো দেখুন
+          </button>
         </div>
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
-          <span style="font-size:12px; color:#64748b;">মার্কেটে মোট বাকি</span>
-          <strong id="d-total-due" style="display:block; font-size:18px; color:var(--danger);">০ ৳</strong>
-        </div>
-      </div>
-      <div class="card">
-        <h3>ডাটা ব্যাকআপ</h3>
-        <button class="btn btn-sm btn-secondary" onclick="exportJSONBackup()">📥 হিসাব ব্যাকআপ ডাউনলোড</button>
-      </div>
-    </div>
 
-    <!-- Stock -->
-    <div id="sec-stock" class="tab-content" style="display:none;">
-      <div class="card">
-        <h3>স্টকে নতুন পণ্য যোগ করুন</h3>
-        <label>পণ্যের নাম *</label>
-        <input type="text" id="p-name" placeholder="যেমন: সয়াবিন তেল (১ লিটার)">
-        <label>প্রতি কার্টনে পিস</label>
-        <input type="number" id="p-ctn" placeholder="যেমন: ২৪">
-        <label>মজুত পরিমাণ (পিস)</label>
-        <input type="number" id="p-qty" placeholder="যেমন: ১০০">
-        <label>প্রতি পিসের বিক্রয় দর (টাকা) *</label>
-        <input type="number" id="p-price" placeholder="যেমন: ১৮৫">
-        <button class="btn" onclick="addStock()">স্টকে যোগ করুন</button>
-      </div>
-      <div class="card">
-        <h3>বর্তমান স্টক তালিকা</h3>
-        <div class="table-responsive">
-          <table id="stock-table">
+        <div class="memo-box" id="memo-print-area">
+          <div class="memo-header">
+            <h2 id="memo-shop-name">মেসার্স এস. এম. ট্রেডার্স</h2>
+            <p class="memo-address" id="memo-shop-address">ঠিকানা: বাজার রোড, সদর মোড়, বাংলাদেশ</p>
+            <p class="memo-address" id="memo-shop-phone">মোবাইল: ০১৭১০-০০০০০০</p>
+            <div class="memo-tagline">সকল প্রকার কৃষি বীজ ও কীটনাশক বিক্রয় করা হয়</div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 12px;">
+            <span><strong>ভাউচার নং:</strong> #<span id="m-inv-no">1001</span></span>
+            <span><strong>তারিখ:</strong> <span id="m-date">--/--/----</span></span>
+          </div>
+
+          <div style="font-size: 14px; margin-bottom: 15px; background: #f8fafc; padding: 10px; border-radius: 6px;">
+            <p><strong>ক্রেতার নাম:</strong> <span id="m-cust-name">-</span></p>
+            <p><strong>মোবাইল:</strong> <span id="m-cust-phone">-</span></p>
+          </div>
+
+          <table>
             <thead>
-              <tr><th>পণ্য</th><th>মজুত</th><th>দর</th><th>অ্যাকশন</th></tr>
+              <tr>
+                <th>বিবরণ (পণ্য)</th>
+                <th>পরিমাণ</th>
+                <th>দর</th>
+                <th style="text-align: right;">মোট টাকা</th>
+              </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <tr>
+                <td id="m-prod-name">-</td>
+                <td id="m-qty">0</td>
+                <td id="m-price">৳ 0</td>
+                <td id="m-total" style="text-align: right; font-weight: bold;">৳ 0</td>
+              </tr>
+            </tbody>
           </table>
-        </div>
-      </div>
-    </div>
 
-    <!-- Sell -->
-    <div id="sec-sell" class="tab-content" style="display:none;">
-      <div class="card">
-        <h3>নতুন বিক্রয় ও চালান</h3>
-        <label>তারিখ *</label>
-        <input type="date" id="s-date">
-        <label>ক্রেতার নাম *</label>
-        <input type="text" id="s-customer" placeholder="ক্রেতার নাম">
-        
-        <label>পণ্য নির্বাচন করুন</label>
-        <div style="display:flex; gap:6px;">
-          <select id="s-product" style="flex:2;"><option value="">পণ্য নির্বাচন করুন</option></select>
-          <input type="number" id="s-qty" value="1" min="1" style="flex:1;">
-          <button class="btn btn-sm btn-secondary" onclick="addToCart()" style="flex:1;">যোগ</button>
-        </div>
-
-        <div class="table-responsive" style="margin-top:10px;">
-          <table id="cart-table">
-            <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>দর</th><th>মোট</th><th>বাদ</th></tr></thead>
-            <tbody><tr><td colspan="5" style="text-align:center; color:#94a3b8;">কোনো পণ্য যোগ করা হয়নি</td></tr></tbody>
-          </table>
-        </div>
-
-        <div style="margin-top:10px; padding:10px; background:#f1f5f9; border-radius:6px;">
-          <p><strong>মোট প্রদেয় বিল: <span id="s-total-display">০</span> ৳</strong></p>
-        </div>
-        <label>জমা টাকা (Payment) *</label>
-        <input type="number" id="s-paid" placeholder="কত টাকা পরিশোধ করেছেন" oninput="calculateSellDue()">
-        <p style="margin-top:8px; color:var(--danger); font-weight:bold;">বাকি টাকা: <span id="s-due-display">০</span> ৳</p>
-        <button class="btn" onclick="saveSale()">বিক্রি সম্পন্ন ও মেমো দেখুন</button>
-      </div>
-    </div>
-
-    <!-- Report -->
-    <div id="sec-report" class="tab-content" style="display:none;">
-      <div class="card">
-        <h3>সকল গ্রাহকের বাকি খাতা</h3>
-        <div id="customer-list"></div>
-      </div>
-      <div id="customer-detail-card" class="card" style="display:none;">
-        <h3 id="det-name">গ্রাহকের হিসাব</h3>
-        <div style="background:#fdf6b2; padding:10px; border-radius:6px; margin-bottom:10px;">
-          <label style="margin-top:0;">বাকি থেকে টাকা জমা নিন:</label>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            <input type="number" id="quick-pay-amt" placeholder="টাকা">
-            <button class="btn btn-secondary btn-sm" onclick="addPayment()">জমা</button>
+          <div style="margin-top: 15px; text-align: right; font-size: 14px; line-height: 1.8;">
+            <p>মোট বিল: <strong>৳ <span id="m-bill">0</span></strong></p>
+            <p>নগদ জমা: <strong style="color: var(--primary);">৳ <span id="m-paid">0</span></strong></p>
+            <p>বাকি: <strong style="color: var(--danger);">৳ <span id="m-due">0</span></strong></p>
           </div>
-        </div>
-        <div class="table-responsive">
-          <table id="history-table">
-            <thead><tr><th>তারিখ</th><th>বিবরণ</th><th>মোট</th><th>জমা</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div style="margin-top:10px; text-align:right;">
-          <p><strong>বর্তমান বাকি: <span id="det-due" style="color:var(--danger); font-size:16px;">০</span> ৳</strong></p>
+
+          <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 13px;">
+            <span>ক্রেতার স্বাক্ষর</span>
+            <span>বিক্রেতার স্বাক্ষর</span>
+          </div>
+
+          <button class="btn no-print" style="margin-top: 20px; width: 100%; background: #0284c7;" onclick="window.print()">
+            🖨️ প্রিন্ট করুন / Save as PDF
+          </button>
         </div>
       </div>
     </div>
 
-  </div>
-
-  <!-- Cash Memo Modal -->
-  <div id="memoModal">
-    <div class="memo-content">
-      <div style="text-align:center; border-bottom:2px double #1f2937; padding-bottom:6px; margin-bottom:10px;">
-        <p style="font-size:11px;">বিসমিল্লাহির রাহমানির রাহিম</p>
-        <h2 style="font-size:20px; color:#1e1b4b;">মেসার্স এস.এম. ট্রেডার্স</h2>
-        <p style="font-size:12px;"><strong>প্রোঃ মোঃ জহিরুল ইসলাম</strong></p>
-        <p style="font-size:11px; color:#475569;">পলাশ বাংলা বাজার, রুহিয়া, ঠাকুরগাঁও।</p>
+    <!-- ২. ড্যাশবোর্ড -->
+    <div id="dashboard" class="tab-content">
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>মোট বিক্রয়</h3>
+          <div class="value" id="dash-total-sales">৳ 0</div>
+        </div>
+        <div class="card">
+          <h3>মোট নগদ আদায়</h3>
+          <div class="value" style="color: var(--primary);" id="dash-cash">৳ 0</div>
+        </div>
+        <div class="card">
+          <h3>মোট দেনা / বাকি</h3>
+          <div class="value" style="color: var(--danger);" id="dash-due">৳ 0</div>
+        </div>
+        <div class="card">
+          <h3>মোট আইটেম সংখ্যা</h3>
+          <div class="value" id="dash-products">0</div>
+        </div>
       </div>
-      <table id="memo-table">
-        <thead><tr><th>নং</th><th>বিবরণ</th><th>পরিমাণ</th><th>দর</th><th>মোট</th></tr></thead>
-        <tbody></tbody>
+    </div>
+
+    <!-- ৩. স্টক তালিকা -->
+    <div id="products" class="tab-content">
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>নতুন বীজ বা কীটনাশক যুক্ত করুন</h3>
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 10px;">
+          <div>
+            <label>পণ্যের নাম ও জাত</label>
+            <input type="text" id="p-name" placeholder="যেমন: হাইব্রিড ধান বীজ / কার্বোফুরান">
+          </div>
+          <div>
+            <label>বিক্রয় মূল্য (প্রতি ইউনিট ৳)</label>
+            <input type="number" id="p-price" placeholder="০.০০">
+          </div>
+          <div>
+            <label>স্টক পরিমাণ</label>
+            <input type="number" id="p-stock" placeholder="পরিমাণ">
+          </div>
+          <button class="btn" onclick="addProduct()">যোগ করুন</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>পণ্যের নাম</th>
+            <th>বিক্রয় মূল্য</th>
+            <th>বর্তমান স্টক</th>
+            <th>অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body"></tbody>
       </table>
-      <div style="margin-top:12px; text-align:right; font-size:13px;">
-        <p>মোট বিল: <strong><span id="m-total">০</span> ৳</strong></p>
-        <p>নগদ জমা: <strong><span id="m-paid">০</span> ৳</strong></p>
-        <p style="border-top:1px solid #333; display:inline-block; padding-left:15px; color:var(--danger);">
-          বর্তমান বাকি: <strong><span id="m-due">০</span> ৳</strong>
-        </p>
-      </div>
-      <div class="no-print" style="margin-top:16px; display:flex; gap:8px;">
-        <button class="btn" onclick="window.print()">🖨️ প্রিন্ট / PDF</button>
-        <button class="btn btn-secondary" onclick="closeMemo()">বন্ধ করুন</button>
+    </div>
+
+    <!-- ৪. বাকি খাতা -->
+    <div id="due" class="tab-content">
+      <div class="card">
+        <h3>বাকি খাতা (কাস্টমার দেনা তালিকা)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>গ্রাহকের নাম</th>
+              <th>মোবাইল নম্বর</th>
+              <th>বাকি পরিমাণ</th>
+              <th>অ্যাকশন</th>
+            </tr>
+          </thead>
+          <tbody id="due-table-body"></tbody>
+        </table>
       </div>
     </div>
+
+    <!-- ৫. বিক্রয় ইতিহাস -->
+    <div id="history" class="tab-content">
+      <div class="card">
+        <h3>সকল বিক্রয়ের তালিকা</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>তারিখ</th>
+              <th>গ্রাহক</th>
+              <th>পণ্য</th>
+              <th>মোট বিল</th>
+              <th>জমা</th>
+              <th>বাকি</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ৬. সেটিংস ও ব্যাকআপ -->
+    <div id="settings" class="tab-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card">
+          <h3>দোকানের ঠিকানা ও মেমো তথ্য পরিবর্তন</h3>
+          <div class="form-group" style="margin-top: 15px;">
+            <label>দোকানের নাম</label>
+            <input type="text" id="set-shop-name">
+          </div>
+          <div class="form-group">
+            <label>ঠিকানা</label>
+            <input type="text" id="set-shop-address">
+          </div>
+          <div class="form-group">
+            <label>মোবাইল নম্বর</label>
+            <input type="text" id="set-shop-phone">
+          </div>
+          <button class="btn" onclick="saveSettings()">তথ্য সংরক্ষণ করুন</button>
+        </div>
+
+        <div class="card">
+          <h3>ডাটা ব্যাকআপ ও রিস্টোর (JSON)</h3>
+          <p style="font-size: 13px; color: #64748b; margin: 10px 0 15px 0;">
+            হিসাব সুরক্ষিত রাখতে নিয়মিত ব্যাকআপ ফাইল ডাউনলোড করে রাখবেন।
+          </p>
+          <div style="margin-bottom: 20px;">
+            <button class="btn" style="background: #0284c7; width: 100%;" onclick="exportJSONBackup()">
+              📥 সম্পূর্ণ ব্যাকআপ ফাইল ডাউনলোড করুন (JSON)
+            </button>
+          </div>
+          <div style="border-top: 1px solid var(--border); padding-top: 15px;">
+            <label>পূর্বে সংরক্ষিত ব্যাকআপ রিস্টোর করুন:</label>
+            <input type="file" id="json-file-input" accept=".json" onchange="importJSONBackup(event)" style="margin-top: 5px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
-    }
-
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('install-banner').style.display = 'flex';
-    });
-    function promptInstall() {
-      if(deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-      } else {
-        alert("মোবাইলে থ্রি-ডট (⋮) মেন্যু চেপে 'Add to Home screen' বা 'Install app' চাপুন।");
-      }
-    }
-
-    let products = JSON.parse(localStorage.getItem('sm_products')) || [
-      { id: '1', name: 'তীর সয়াবিন তেল (১ লিটার)', ctn: 12, qty: 50, price: 185 },
-      { id: '2', name: 'লাক্স সাবান (১০০ গ্রাম)', ctn: 72, qty: 100, price: 65 }
-    ];
-    let sales = JSON.parse(localStorage.getItem('sm_sales')) || [];
-    let cart = [];
-    let activeCustomer = null;
-
-    const titleText = "মেসার্স এস.এম. ট্রেডার্স";
-    let charIdx = 0;
-    function typeEffect() {
-      if (charIdx < titleText.length) {
-        document.getElementById("typewriter").innerHTML += titleText.charAt(charIdx);
-        charIdx++;
-        setTimeout(typeEffect, 70);
-      } else {
-        document.getElementById("sub1").style.display = "block";
-        document.getElementById("sub2").style.display = "block";
-        setTimeout(() => { skipSplash(); }, 1200);
-      }
-    }
-    function skipSplash() {
-      const splash = document.getElementById("splash");
-      if(splash) splash.style.display = "none";
-    }
-
-    window.onload = function() {
-      typeEffect();
-      document.getElementById('s-date').valueAsDate = new Date();
-      renderStock();
-      populateProductSelect();
-      updateDashboard();
-    };
-
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
-      document.getElementById('sec-' + tab).style.display = 'block';
-      document.getElementById('tab-btn-' + tab).classList.add('active');
-      if(tab === 'dash') updateDashboard();
-      if(tab === 'report') renderCustomers();
-      if(tab === 'stock') renderStock();
-    }
-
-    function updateDashboard() {
-      const today = new Date().toISOString().split('T')[0];
-      const todayTotal = sales.filter(s => s.date === today).reduce((a, b) => a + (b.total || 0), 0);
-      const allTotal = sales.reduce((a, b) => a + (b.total || 0), 0);
-      const allPaid = sales.reduce((a, b) => a + (b.paid || 0), 0);
-      document.getElementById('d-today-sale').innerText = todayTotal + " ৳";
-      document.getElementById('d-total-due').innerText = Math.max(0, allTotal - allPaid) + " ৳";
-    }
-
-    function addStock() {
-      const name = document.getElementById('p-name').value.trim();
-      const ctn = document.getElementById('p-ctn').value;
-      const qty = parseFloat(document.getElementById('p-qty').value) || 0;
-      const price = parseFloat(document.getElementById('p-price').value);
-      if (!name || isNaN(price)) return alert("পণ্যের নাম ও সঠিক মূল্য দিন!");
-      products.push({ id: Date.now().toString(), name, ctn, qty, price });
-      localStorage.setItem('sm_products', JSON.stringify(products));
-      document.getElementById('p-name').value = '';
-      document.getElementById('p-price').value = '';
-      renderStock();
-      populateProductSelect();
-      alert("পণ্য যোগ হয়েছে!");
-    }
-
-    function renderStock() {
-      const tbody = document.querySelector('#stock-table tbody');
-      tbody.innerHTML = products.map(p => `
-        <tr>
-          <td><strong>${p.name}</strong></td>
-          <td>${p.qty || 0} পিস</td>
-          <td>${p.price} ৳</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteStock('${p.id}')">মুছুন</button></td>
-        </tr>
-      `).join('');
-    }
-
-    function deleteStock(id) {
-      products = products.filter(p => p.id !== id);
-      localStorage.setItem('sm_products', JSON.stringify(products));
-      renderStock();
-      populateProductSelect();
-    }
-
-    function populateProductSelect() {
-      const select = document.getElementById('s-product');
-      select.innerHTML = '<option value="">পণ্য নির্বাচন করুন</option>' + 
-        products.map(p => `<option value="${p.id}">${p.name} (${p.price} ৳)</option>`).join('');
-    }
-
-    function addToCart() {
-      const id = document.getElementById('s-product').value;
-      const qty = parseFloat(document.getElementById('s-qty').value) || 1;
-      if (!id) return alert("পণ্য সিলেক্ট করুন!");
-      const prod = products.find(p => p.id === id);
-      cart.push({ id: prod.id, name: prod.name, price: prod.price, qty: qty, total: prod.price * qty });
-      renderCart();
-    }
-
-    function removeFromCart(idx) {
-      cart.splice(idx, 1);
-      renderCart();
-    }
-
-    function renderCart() {
-      const tbody = document.querySelector('#cart-table tbody');
-      if (cart.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো পণ্য যোগ করা হয়নি</td></tr>';
-        document.getElementById('s-total-display').innerText = '০';
-        return;
-      }
-      tbody.innerHTML = cart.map((it, idx) => `
-        <tr>
-          <td>${it.name}</td><td>${it.qty}</td><td>${it.price}</td><td>${it.total}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="removeFromCart(${idx})">×</button></td>
-        </tr>
-      `).join('');
-      const total = cart.reduce((a, b) => a + b.total, 0);
-      document.getElementById('s-total-display').innerText = total;
-      calculateSellDue();
-    }
-
-    function calculateSellDue() {
-      const total = cart.reduce((a, b) => a + b.total, 0);
-      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
-      document.getElementById('s-due-display').innerText = Math.max(0, total - paid);
-    }
-
-    function saveSale() {
-      const date = document.getElementById('s-date').value;
-      const customer = document.getElementById('s-customer').value.trim();
-      const paid = parseFloat(document.getElementById('s-paid').value) || 0;
-      if (!customer || cart.length === 0) return alert("গ্রাহকের নাম ও পণ্য দিন!");
-      const total = cart.reduce((a, b) => a + b.total, 0);
-
-      cart.forEach(it => {
-        const p = products.find(x => x.id === it.id);
-        if(p) p.qty = Math.max(0, (p.qty || 0) - it.qty);
-      });
-      localStorage.setItem('sm_products', JSON.stringify(products));
-
-      sales.push({ id: Date.now().toString(), date, customer, items: [...cart], total, paid });
-      localStorage.setItem('sm_sales', JSON.stringify(sales));
-      alert("বিক্রি সম্পন্ন হয়েছে!");
-      cart = [];
-      renderCart();
-      document.getElementById('s-customer').value = '';
-      document.getElementById('s-paid').value = '';
-    }
-
-    function renderCustomers() {
-      const listDiv = document.getElementById('customer-list');
-      const names = [...new Set(sales.map(s => s.customer))];
-      listDiv.innerHTML = names.map(name => {
-        const custSales = sales.filter(s => s.customer === name);
-        const total = custSales.reduce((a, b) => a + (b.total || 0), 0);
-        const paid = custSales.reduce((a, b) => a + (b.paid || 0), 0);
-        const due = total - paid;
-        return `
-          <div class="customer-item" onclick="viewCustomer('${name}')">
-            <div><strong>${name}</strong></div>
-            <div><span style="color:${due > 0 ? 'var(--danger)' : '#059669'}; font-weight:bold;">${due > 0 ? 'বাকি: ' + due : 'পরিশোধ'} ৳</span></div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function viewCustomer(name) {
-      activeCustomer = name;
-      document.getElementById('customer-detail-card').style.display = 'block';
-      document.getElementById('det-name').innerText = name + "-এর খাতা";
-      const records = sales.filter(s => s.customer === name);
-      const tbody = document.querySelector('#history-table tbody');
-      let totalAll = 0, paidAll = 0;
-      tbody.innerHTML = records.map(r => {
-        totalAll += (r.total || 0); paidAll += (r.paid || 0);
-        return `<tr><td>${r.date}</td><td>${r.items?.map(i=>i.name).join(', ')||'নগদ জমা'}</td><td>${r.total}</td><td>${r.paid}</td></tr>`;
-      }).join('');
-      document.getElementById('det-due').innerText = totalAll - paidAll;
-    }
-
-    function addPayment() {
-      const amt = parseFloat(document.getElementById('quick-pay-amt').value);
-      if (!amt || !activeCustomer) return;
-      sales.push({ id: Date.now().toString(), date: new Date().toISOString().split('T')[0], customer: activeCustomer, items: [], total: 0, paid: amt });
-      localStorage.setItem('sm_sales', JSON.stringify(sales));
-      document.getElementById('quick-pay-amt').value = '';
-      viewCustomer(activeCustomer);
-      alert("টাকা জমা সফল হয়েছে!");
-    }
-
-    function closeMemo() { document.getElementById('memoModal').style.display = 'none'; }
-
-    function exportJSONBackup() {
-      const blob = new Blob([JSON.stringify({ products, sales }, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `SM_Traders_Backup.json`;
-      a.click();
-    }
-  </script>
+  <!-- স্ক্রিপ্ট ফাইল লিংক -->
+  <script src="./app.js"></script>
 </body>
 </html>
